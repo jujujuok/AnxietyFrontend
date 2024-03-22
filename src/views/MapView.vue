@@ -1,34 +1,40 @@
 <template>
   <div>
     <h1>Anxiety Map</h1>
-    <div style="height:600px; width:800px">
-      <l-map ref="map" v-model:zoom="zoom" :center="[47.41322, -1.219482]">
-        <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
-          name="OpenStreetMap"></l-tile-layer>
-      </l-map>
+    <div id="container">
+      <div id="map" style="height:80vh;"></div>
+      <!--
+        Build an interactive Map:
+        https://medium.com/@smhabibjr/implement-an-interactive-map-in-the-vue-js-8a865010fb41
+      -->
     </div>
   </div>
 </template>
 
-
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import * as L from 'leaflet';
 
-export default {
-  components: {
-    LMap,
-    LTileLayer,
-  },
-  data() {
-    return {
-      zoom: 2,
-    };
-  },
-};
+const initialMap = ref(null);
+
+onMounted(()=> {
+    initialMap.value = L.map('map').setView([51.163361, 10.447683], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, 
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(initialMap.value);
+});
 </script>
 
+
 <style>
+#mapContainer {
+  min-height: 69vh;
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 1024px) {
   .map {
     min-height: 100vh;
