@@ -8,6 +8,7 @@ import Home from './components/Home.vue'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/map">Map</RouterLink>
+        <RouterLink to="/dashboard">Dashboard</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
   </header>
