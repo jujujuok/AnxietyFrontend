@@ -12,17 +12,10 @@ import Home from './components/Home.vue'
       </nav>
   </header>
 
-  <RouterView style="margin-bottom: 50px;" />
+  <RouterView style="margin-top: calc(60px + 1rem); margin-bottom: 50px;" />
 </template>
 
 <style scoped>
-RouterLink {
-  color: var(--color-text);
-  text-decoration: none;
-  padding: 1rem;
-  border-left: 1px solid var(--color-border);
-  font-size: 18px;
-}
 
 header {
   position: fixed;
@@ -39,7 +32,7 @@ nav {
   width: 100%;
   font-size: 18px;
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 2rem; /*this makes the space at the top of the nav*/
 }
 
 nav a.router-link-exact-active {
