@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('../views/MapView.vue')
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
@@ -23,11 +28,6 @@ const router = createRouter({
       path: '/:catchAll(.*)',
       name: 'not-found',
       component: () => import('../views/ErrorView.vue')
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
     },
   ]
 })
