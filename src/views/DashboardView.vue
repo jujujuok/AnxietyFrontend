@@ -68,9 +68,8 @@ const entries = [
 <template>
   <div class="dashboard">
     <h1>Dashboard</h1>
-
     <md-list v-if="entries"> <!-- todo: if there are entries -->
-      <DashboardEntry v-for="entry in entries" 
+      <DashboardEntry class="entry" v-for="entry in entries" 
       :key="entry.iid" 
       :color="entry.color" 
       :icon="entry.icon" 
@@ -87,21 +86,25 @@ const entries = [
 </template>
 
 <style scoped>
+
 .dashboard {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
   background-color: rgb(39, 183, 255);
   padding: 1rem;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 33%;
 }
 
-.entry {
+.dashboard .entry {
   flex: 1;
-  background-color: rgb(152, 71, 71);
+  background-color: rgb(134, 210, 68);
   padding: 1rem;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 95%;
 }
 
 div {

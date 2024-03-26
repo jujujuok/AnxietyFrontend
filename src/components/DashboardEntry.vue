@@ -44,17 +44,17 @@ export default defineComponent({
 
 
 .dashboarditem {
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    margin: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 100px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-}
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        margin: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 100px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    }
 
 </style>

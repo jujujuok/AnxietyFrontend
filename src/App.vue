@@ -4,21 +4,21 @@ import Home from './components/Home.vue'
 </script>
 
 <template>
-  <header>
+  <footer>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/map">Map</RouterLink>
         <RouterLink to="/dashboard">Dashboard</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
-  </header>
+  </footer>
 
   <RouterView style="margin-top: calc(60px + 1rem); margin-bottom: 50px;" />
 </template>
 
 <style scoped>
 
-header {
+footer {
   position: fixed;
   top: 0;
   left: 0;
@@ -55,4 +55,3 @@ nav a:first-of-type {
 }
 
 </style>
-./components/Home.vue
