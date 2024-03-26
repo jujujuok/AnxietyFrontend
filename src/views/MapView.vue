@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Anxiety Map</h1>
+    <h1 class="green">Anxiety Map</h1>
     <div id="container">
       <div id="map" style="height:80vh;"></div>
       <!--

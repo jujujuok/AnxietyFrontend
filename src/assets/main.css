@@ -9,7 +9,7 @@
 a, 
 .green {
   text-decoration: none;
-  color: rgb(8, 72, 50);
+  color: var(--dark-mode-green);
   transition: 0.4s;
   padding: 3px;
 }
@@ -18,4 +18,28 @@ a,
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
+}
+
+.orange {
+  color: var(--dark-mode-orange);
+}
+
+.blue {
+  color: var(--dark-mode-blue);
+}
+
+.purple {
+  color: var(--dark-mode-purple);
+}
+
+.cyan {
+  color: var(--dark-mode-cyan);
+}
+
+.text {
+  color: var(--dark-mode-text);
+}
+
+.background {
+  background-color: var(--dark-mode-background);
 }

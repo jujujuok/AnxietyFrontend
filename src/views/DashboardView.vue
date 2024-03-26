@@ -10,6 +10,8 @@ import '@material/web/list/list-item'
 // --- COMPONENTS ---
 import DashboardEntry from '@/components/DashboardEntry.vue';
 
+
+
 abstract class DashboardItemStruct {
   color: string = "#aaaaaa"
   icon: string = "default-icon"
@@ -52,22 +54,13 @@ const entries = [
   new InterpolRedNoticeStruct(4, "Maximilian bvs", new Date(), "19 Jahre, Steuerhinterziehung", "Panama")
 ];
 
-// export interface RedNoticeDetails extends Record<string, any> {
-//   iid: number
-//   type: string
-//   title: string
-//   date: Date
-//   description: string
-//   location: string
-// }
-// TODO: Fabi warum funktioniert export default nicht
 </script>
 
 <template>
   <div class="dashboard">
-    <h1>Dashboard</h1>
+    <h1 class="green">Dashboard</h1>
     <md-list v-if="entries"> <!-- todo: if there are entries -->
-      <DashboardEntry class="entry" v-for="entry in entries" 
+      <DashboardEntry class="entry blue" v-for="entry in entries" 
       :key="entry.iid" 
       :color="entry.color" 
       :icon="entry.icon" 
@@ -89,7 +82,6 @@ const entries = [
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background-color: rgb(39, 183, 255);
   padding: 1rem;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
