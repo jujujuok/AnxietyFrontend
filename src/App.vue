@@ -1,30 +1,29 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import Home from './components/Home.vue'
+
 </script>
 
 <template>
   <footer>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/map">Map</RouterLink>
-        <RouterLink to="/dashboard">Dashboard</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/"><VIcon name="co-home"></VIcon></RouterLink>
+        <RouterLink to="/map"><VIcon name="co-map"/></RouterLink>
+        <RouterLink to="/dashboard"><VIcon name="ri-dashboard-2-line"/></RouterLink>
       </nav>
   </footer>
 
-  <RouterView style="margin-top: calc(60px + 1rem); margin-bottom: 50px;" />
+  <RouterView style="margin-bottom: calc(60px + 1rem);"/>
 </template>
 
 <style scoped>
 
 footer {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   z-index: 1;
-  background-color: #cc503b;
+  background-color: #00000000;
   align-items: center;
   padding:1rem;
 }
@@ -33,7 +32,6 @@ nav {
   width: 100%;
   font-size: 18px;
   text-align: center;
-  margin-top: 2rem; /*this makes the space at the top of the nav*/
 }
 
 nav a.router-link-exact-active {

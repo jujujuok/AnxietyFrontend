@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'   // the fck is this?!
-import { defineComponent } from 'vue'
 
 // --- MATERIAL IMPORTS ---
 import '@material/web/list/list'
@@ -117,19 +115,3 @@ p {
   font-family: 'Roboto Mono', monospace;
 }
 </style>
-
-<!--
-  <script lang="ts">
-import type { PropType } from 'vue'
-import { defineComponent } from 'vue'
-
-import '@material/web/list/list'
-import '@material/web/list/list-item'
-import '@material/web/icon/icon'
-import ResultListItem from '@/components/search-result/ResultListItem.vue'
-import type { SearchResult } from '@/views/SearchQuery'
-import { useMedia } from '@/Media'
-
-
-</script>
--->
