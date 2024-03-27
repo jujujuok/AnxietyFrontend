@@ -20,6 +20,11 @@ a,
   }
 }
 
+.text-highlight {
+  color: var(--dark-mode-text-highlight);
+}
+
+
 .orange {
   color: var(--dark-mode-orange);
 }

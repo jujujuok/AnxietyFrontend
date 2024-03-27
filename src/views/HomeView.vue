@@ -8,7 +8,7 @@ import Home from '@/components/Home.vue'
   <Home msg="Welcome to the official AnxietyProject" />
 
   <div class="text home">
-    <h1>Home</h1>
+    <h1 class="text-highlight">Home</h1>
     <p>This is a project from some students from the 
       <a href="https://www.getdigital.de/web/img/products/1100x1100/Aufkleber_Trollface.220426.webp">dhbw-stuttgart</a> 
       university.
@@ -16,7 +16,7 @@ import Home from '@/components/Home.vue'
 
     <br>
 
-    <h2>Some of the APIs used include:</h2>
+    <h2 class="text-highlight">Some of the APIs used include:</h2>
     <ul>
       <li>Autobahn API</li>
       <li>Deutscher Wetterdienst API</li>
