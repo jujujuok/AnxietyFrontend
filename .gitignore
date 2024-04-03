@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
 .DS_Store
 dist
 dist-ssr
@@ -30,3 +29,6 @@ coverage
 *.tsbuildinfo
 
 node_modules/*
+package-lock.json
+
+test.py
