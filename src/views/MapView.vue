@@ -16,32 +16,113 @@ import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 
-var latlngs = [
-  [51.1657, 10.4515],
-  [52.5200, 13.4050],
-  [48.7758, 9.1829],
-  [50.1109, 8.6821],
-  [53.5511, 9.9937]
-];
 
-var latlngs2 = [
+
+
+var unwetter = [
   [
-    8.3203,
-    48.5886
-  ],
+    [
+      8.0513,
+      48.2218
+    ],
+    [
+      8.07,
+      48.2272
+    ],
+    [
+      8.0843,
+      48.2221
+    ],
+    [
+      8.0678,
+      48.2186
+    ],
+    [
+      8.071,
+      48.2131
+    ],
+    [
+      8.0815,
+      48.2131
+    ],
+    [
+      8.0827,
+      48.2045
+    ],
+    [
+      8.057,
+      48.2045
+    ],
+    [
+      8.0584,
+      48.2161
+    ],
+    [
+      8.0515,
+      48.2161
+    ],
+    [
+      8.0513,
+      48.2218
+    ]
+  ].map(array => array.reverse()),
   [
-    8.209,
-    48.4666
-  ],
+    [
+      8.0557,
+      48.6751
+    ],
+    [
+      8.0743,
+      48.6726
+    ],
+    [
+      8.0661,
+      48.6668
+    ],
+    [
+      8.0681,
+      48.6541
+    ],
+    [
+      8.0575,
+      48.6548
+    ],
+    [
+      8.0557,
+      48.6751
+    ]
+
+
+  ].map(array => array.reverse()),
   [
-    8.2159,
-    48.4568
-  ],
-  [
-    8.1311,
-    48.6068
-  ]
-].map(array => array.reverse())
+
+    [
+      8.3647,
+      47.9725
+    ],
+    [
+      8.3668,
+      47.9831
+    ],
+    [
+      8.3724,
+      47.9806
+    ],
+    [
+      8.3802,
+      47.9777
+    ],
+    [
+      8.3797,
+      47.9662
+    ],
+    [
+      8.3647,
+      47.9725
+    ]
+
+  ].map(array => array.reverse())
+]
 
 
 const map = ref(null);
@@ -56,8 +137,23 @@ onMounted(() => {
   L.marker([50.0000, 8.6821]).addTo(map.value);
   L.marker([49.1234, 8.6821],).addTo(map.value);
 
-  L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
-  L.polygon(latlngs, { color: 'red' }).addTo(map.value);
+  // L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
+  // L.polygon(latlngs, { color: 'red' }).addTo(map.value);
+
+  unwetter.forEach(coords => {
+    const polygon = L.polygon(coords, { color: 'red' }).addTo(map.value);
+
+      // Bind popup
+      polygon.bindPopup('This is a polygon');
+
+      // // Hover effect
+      polygon.on('mouseover', function (e) {
+        this.setStyle({ fillOpacity: 0.7 });
+      });
+      polygon.on('mouseout', function (e) {
+        this.setStyle({ fillOpacity: 0.2 });
+      });
+  });
 });
 
 </script>
