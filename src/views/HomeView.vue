@@ -16,6 +16,13 @@ import Home from '@/components/Home.vue'
 
     <br>
 
+    <h2 class="text-highlight">Disclaimer</h2>
+    <p>
+     Der Autor übernimmt keine Gewähr für die Aktualität, Korrektheit, Vollständigkeit 
+     oder Qualität der bereitgestellten Informationen.
+    </p>
+
+
     <h2 class="text-highlight">Some of the APIs used include:</h2>
     <ul>
       <li>Autobahn API</li>
