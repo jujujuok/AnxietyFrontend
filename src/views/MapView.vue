@@ -1,6 +1,11 @@
 <template>
   <div>
     <h1 class="green">Anxiety Map</h1>
+    <v-radio-group>
+      <v-radio label="Radio One" value="one"></v-radio>
+      <v-radio label="Radio Two" value="two"></v-radio>
+      <v-radio label="Radio Three" value="three"></v-radio>
+    </v-radio-group>
     <div id="container">
       <div id="map" style="height:80vh;"></div>
       <!--
@@ -15,114 +20,59 @@
 import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
+import axios from 'axios';
+
+const url = "http://212.132.100.147:8000/dashboard";
 
 
+// async callApi(url: string, accept ?: string) {
+function callApi(url){
+  const headers = {
+    'accept': 'application/json'
+  };
 
+  try {
+    const response = axios.get(url, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-var unwetter = [
-  [
-    [
-      8.0513,
-      48.2218
-    ],
-    [
-      8.07,
-      48.2272
-    ],
-    [
-      8.0843,
-      48.2221
-    ],
-    [
-      8.0678,
-      48.2186
-    ],
-    [
-      8.071,
-      48.2131
-    ],
-    [
-      8.0815,
-      48.2131
-    ],
-    [
-      8.0827,
-      48.2045
-    ],
-    [
-      8.057,
-      48.2045
-    ],
-    [
-      8.0584,
-      48.2161
-    ],
-    [
-      8.0515,
-      48.2161
-    ],
-    [
-      8.0513,
-      48.2218
-    ]
-  ].map(array => array.reverse()),
-  [
-    [
-      8.0557,
-      48.6751
-    ],
-    [
-      8.0743,
-      48.6726
-    ],
-    [
-      8.0661,
-      48.6668
-    ],
-    [
-      8.0681,
-      48.6541
-    ],
-    [
-      8.0575,
-      48.6548
-    ],
-    [
-      8.0557,
-      48.6751
-    ]
+var data = callApi(url);
 
+console.log(data)
 
-  ].map(array => array.reverse()),
-  [
-
-    [
-      8.3647,
-      47.9725
-    ],
-    [
-      8.3668,
-      47.9831
-    ],
-    [
-      8.3724,
-      47.9806
-    ],
-    [
-      8.3802,
-      47.9777
-    ],
-    [
-      8.3797,
-      47.9662
-    ],
-    [
-      8.3647,
-      47.9725
-    ]
-
-  ].map(array => array.reverse())
-]
+// var unwetter = [
+//   [
+//     [
+//       8.0513,
+//       48.2218
+//     ],
+//     [
+//       8.0827,
+//       48.2045
+//     ],
+//     [
+//       8.057,
+//       48.2045
+//     ],
+//     [
+//       8.0513,
+//       48.2218
+//     ]
+//   ].map(array => array.reverse()),
+//   [
+//     [
+//       8.0557,
+//       48.6751
+//     ],
+//     [
+//       8.0557,
+//       48.6751
+//     ]
+//   ].map(array => array.reverse())
+// ]
 
 
 const map = ref(null);
@@ -143,16 +93,15 @@ onMounted(() => {
   unwetter.forEach(coords => {
     const polygon = L.polygon(coords, { color: 'red' }).addTo(map.value);
 
-      // Bind popup
-      polygon.bindPopup('This is a polygon');
+    polygon.bindPopup('This is a polygon');
 
-      // // Hover effect
-      polygon.on('mouseover', function (e) {
-        this.setStyle({ fillOpacity: 0.7 });
-      });
-      polygon.on('mouseout', function (e) {
-        this.setStyle({ fillOpacity: 0.2 });
-      });
+    // // Hover effect
+    polygon.on('mouseover', function (e) {
+      this.setStyle({ fillOpacity: 0.7 });
+    });
+    polygon.on('mouseout', function (e) {
+      this.setStyle({ fillOpacity: 0.2 });
+    });
   });
 });
 
