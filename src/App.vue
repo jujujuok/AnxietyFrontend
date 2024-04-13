@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-
+import { RouterLink, RouterView } from 'vue-router';
+import { VIcon } from 'vuetify/components'; // Import v-icon
 </script>
 
 <template>
   <footer>
-      <nav>
-        <RouterLink to="/"><VIcon name="co-home"></VIcon></RouterLink>
-        <RouterLink to="/map"><VIcon name="co-map"/></RouterLink>
-        <RouterLink to="/dashboard"><VIcon name="ri-dashboard-2-line"/></RouterLink>
-      </nav>
+    <nav>
+      <RouterLink to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
+      <RouterLink to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
+      <RouterLink to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
+    </nav>
   </footer>
 
-  <RouterView style="margin-bottom: calc(60px + 1rem);"/>
+  <RouterView style="margin-bottom: calc(60px + 1rem);" />
 </template>
 
 <style scoped>
-
 footer {
   position: fixed;
   bottom: 0;
@@ -25,7 +24,7 @@ footer {
   z-index: 1;
   background-color: #00000000;
   align-items: center;
-  padding:1rem;
+  padding: 1rem;
 }
 
 nav {
@@ -51,5 +50,4 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
-
 </style>
