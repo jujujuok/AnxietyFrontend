@@ -15,18 +15,7 @@ const vuetify = createVuetify({
     directives,
 })
 
-//Oh-Vue-Icons
-import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { CoHome, CoMap, RiDashboard2Line, IoLocation } from 'oh-vue-icons/icons'
-
-addIcons(CoMap)
-addIcons(RiDashboard2Line)
-addIcons(CoHome)
-addIcons(IoLocation)
-
 const app = createApp(App)
-
-app.component('VIcon', OhVueIcon)
 
 app.use(router)
 app.use(vuetify)
