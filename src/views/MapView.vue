@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <h1 class="green">Anxiety Map</h1>
-    <v-radio-group>
-      <v-radio label="Radio One" value="one"></v-radio>
-      <v-radio label="Radio Two" value="two"></v-radio>
-      <v-radio label="Radio Three" value="three"></v-radio>
-    </v-radio-group>
-    <div id="container">
-      <div id="map" style="height:80vh;"></div>
-      <!--
-        Build an interactive Map:
-        https://medium.com/@smhabibjr/implement-an-interactive-map-in-the-vue-js-8a865010fb41
-      -->
-    </div>
+  <div class="filter">
+    <v-btn-toggle v-model="displaySelection" background-color="primary" dark multiple>
+      <v-btn value="radioactive" icon="mdi-radioactive"></v-btn>
+      <v-btn value="air" icon="mdi-weather-windy"></v-btn>
+      <v-btn value="interpol" icon="mdi-police-badge"></v-btn>
+      <v-btn value="autobahn" icon="mdi-car"></v-btn>
+      <v-btn value="weather_warnings" icon="mdi-weather-lightning-rainy"></v-btn>
+      <!-- <pre>{{ toggleMultiple }}</pre> -->
+    </v-btn-toggle>
+  </div>
+  <div id="container">
+    <div id="map" style="height:80vh;"></div>
   </div>
 </template>
 
@@ -20,59 +18,52 @@
 import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
-import axios from 'axios';
 
-const url = "http://212.132.100.147:8000/dashboard";
+
+// todo fetch ok fabi 
+import { VBtn, VBtnToggle } from 'vuetify/components';
+
+const url = "http://212.132.100.147:8000/map";
+
+let displaySelection = ref(true);
 
 
 // async callApi(url: string, accept ?: string) {
-function callApi(url){
+async function callApi(url) {
   const headers = {
     'accept': 'application/json'
   };
 
-  try {
-    const response = axios.get(url, { headers });
-    return response.data;
-  } catch (error) {
-    console.error(error);
+  const response = await fetch(url, { headers });
+
+  if (response.ok) {
+    return await response.json();
   }
 }
+// console.log("Environment: ",process.env.NODE_ENV)
 
-var data = callApi(url);
+let data = callApi(url);
 
-console.log(data)
+console.log("API DATA", data)
 
-// var unwetter = [
-//   [
-//     [
-//       8.0513,
-//       48.2218
-//     ],
-//     [
-//       8.0827,
-//       48.2045
-//     ],
-//     [
-//       8.057,
-//       48.2045
-//     ],
-//     [
-//       8.0513,
-//       48.2218
-//     ]
-//   ].map(array => array.reverse()),
-//   [
-//     [
-//       8.0557,
-//       48.6751
-//     ],
-//     [
-//       8.0557,
-//       48.6751
-//     ]
-//   ].map(array => array.reverse())
-// ]
+
+var coordinates = [
+  [
+    [
+      [
+        8.2,
+        48.7
+      ],
+      [
+        8.9,
+        48.7
+      ],
+      [
+        8.0,
+        50.0
+      ]
+    ].map(array => array.reverse())
+  ]]
 
 
 const map = ref(null);
@@ -90,7 +81,10 @@ onMounted(() => {
   // L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
   // L.polygon(latlngs, { color: 'red' }).addTo(map.value);
 
-  unwetter.forEach(coords => {
+
+  console.log("displayselection value", displaySelection)
+
+  coordinates.forEach(coords => {
     const polygon = L.polygon(coords, { color: 'red' }).addTo(map.value);
 
     polygon.bindPopup('This is a polygon');
@@ -105,14 +99,28 @@ onMounted(() => {
   });
 });
 
+
+
 </script>
 
 
 <style>
-#mapContainer {
-  min-height: 69vh;
-  display: flex;
-  align-items: center;
+.filter {
+  /* position: fixed; */
+  /* right: 0; */
+}
+
+.v-btn-toggle {
+  /* flex-direction: column; */
+}
+
+#container {
+  height: 100%;
+  width: 100%;
+}
+
+#map {
+  height: calc(100vh - 10%);
 }
 
 @media (min-width: 1024px) {

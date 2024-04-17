@@ -11,12 +11,14 @@
         "build-only": "vite build",
         "type-check": "vue-tsc --build --force",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-        "format": "prettier --write src/"
+        "format": "prettier --write src/",
+        "prod": "npm run-script build && serve build"
     },
     "dependencies": {
         "@material/web": "^1.0.0",
         "axios": "^1.6.8",
         "npm": "^10.5.0",
+        "serve": "^14.2.1",
         "swagger-ui": "^5.13.0",
         "vue": "^3.3.4",
         "vue-router": "^4.2.4",

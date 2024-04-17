@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import MapView from '../views/MapView.vue'
+import HomeView from '@/views/HomeView.vue'
+// import MapView from '@/views/MapView.vue'
+import MapView from '@/views/MapView.vue'
+import DashboardView from '@/views/DashboardView.vue'
+import ErrorView from '@/views/ErrorView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,22 +17,22 @@ const router = createRouter({
     {
       path: '/map',
       name: 'map',
-      component: () => MapView
+      component:  MapView
     },
     {
       path: '/world',
       name: 'world',
-      component: () => MapView
+      component: MapView
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
+      component: DashboardView
     },
     {
       path: '/:catchAll(.*)',
       name: 'not-found',
-      component: () => import('../views/ErrorView.vue')
+      component: ErrorView
     },
   ]
 })
