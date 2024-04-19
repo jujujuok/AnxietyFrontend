@@ -34,9 +34,9 @@ const onClick = () => {
 
 <style scoped>
 .selected-button {
-    border-radius: 20px;
-    font-family: "Roboto", sans-serif;
-    font-size: 12px;
+    border-radius: 1vh;
+    margin: 0vh 2vh 0vh 0vh;
+    font-size: 0.7rem;
 }
 .selected-background {
     color: white;

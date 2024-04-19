@@ -31,27 +31,41 @@
         </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar>
+    <v-app-bar style="display: flex; justify-content: start;">
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
         <v-app-bar-title>Dashboard</v-app-bar-title>
+        <SearchBar @update:search="handleSearch" />
     </v-app-bar>
 
     <v-main class="main-container">
         <!-- Row for the buttons -->
-        <v-row class="mb-4">
+        <v-row style="margin: 0vh 2vh;" class="mb-4">
             <v-col
                     cols="12"
                     class="d-flex justify-start"
             >
                 <SelectedButton
-                        v-for="button_text in buttons_texts"
-                        :key="button_text.value"
-                        :value="button_text.value"
-                        :selected="selected"
-                        @update:selected="selected = $event"
+                    value="all"
+                    :selected="selected"
+                    @update:selected="updateSelected"
                 >
-                    {{ button_text.text }}
+                    Alle Warnungen
+                </SelectedButton>
+
+                <SelectedButton
+                    value="food"
+                    :selected="selected"
+                    @update:selected="updateSelected"
+                >
+                    Lebensmittel
+                </SelectedButton>
+
+                <SelectedButton
+                    value="product"
+                    :selected="selected"
+                    @update:selected="updateSelected"
+                >
+                    Produkte
                 </SelectedButton>
             </v-col>
         </v-row>
@@ -67,6 +81,7 @@
                 >
                     <v-card style="padding: 0px 10px;">
                         <v-list lines="two" style="
+                                text-overflow: ellipsis;
                                 display: flex;
                                 overflow: hidden;
                                 justify-content: flex-start;
@@ -84,6 +99,11 @@
 </template>
 
 <style>
+
+.v-list-subheader__text {
+    white-space: normal;
+    font-weight: bold;
+}
 
 .v-application__wrap {
     background-color: var(--dark-mode-bg);
@@ -118,9 +138,19 @@
 <script setup>
 import {ref} from 'vue'
 import SelectedButton from "@/components/SelectedButton.vue";
+import SearchBar from "@/components/SearchBar.vue";
 
 const drawer = ref(null);
-const selected = ref('nearby');
+const selected = ref('all');
+const searchResults = ref([]);
+
+const handleSearch = (query) => {
+    console.log(searchResults.value);
+};
+
+const updateSelected = (newValue) => {
+    selected.value = newValue;
+};
 
 const cards_info = [{
     "id": 7014,
@@ -177,11 +207,6 @@ const cards_info = [{
         }
     }]
 
-const buttons_texts = [
-    {text: 'In der Nähe', value: 'nearby'},
-    {text: 'Deutschland', value: 'germany'},
-    {text: 'Bundesland', value: 'state'}
-];
 </script>
 
 <script>
