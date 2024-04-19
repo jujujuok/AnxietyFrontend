@@ -1,4 +1,5 @@
 <template>
+    <SideView v-model="showDetails"></SideView>
     <v-navigation-drawer v-model="drawer">
         <v-list dense>
             <v-list-item title="Dashboard"></v-list-item>
@@ -34,7 +35,7 @@
     <v-app-bar style="display: flex; justify-content: start;">
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-app-bar-title>Dashboard</v-app-bar-title>
-        <SearchBar @update:search="handleSearch" />
+        <SearchBar @update:search="handleSearch"/>
     </v-app-bar>
 
     <v-main class="main-container">
@@ -42,31 +43,51 @@
         <v-row style="margin: 0vh 2vh;" class="mb-4">
             <v-col
                     cols="12"
-                    class="d-flex justify-start"
+                    class="d-flex justify-start justify-space-between"
             >
-                <SelectedButton
-                    value="all"
-                    :selected="selected"
-                    @update:selected="updateSelected"
-                >
-                    Alle Warnungen
-                </SelectedButton>
-
-                <SelectedButton
-                    value="food"
-                    :selected="selected"
-                    @update:selected="updateSelected"
-                >
-                    Lebensmittel
-                </SelectedButton>
-
-                <SelectedButton
-                    value="product"
-                    :selected="selected"
-                    @update:selected="updateSelected"
-                >
-                    Produkte
-                </SelectedButton>
+                <div class="button-container">
+                    <SelectedButton
+                            value="all"
+                            :selected="selected"
+                            @update:selected="updateSelected"
+                    >
+                        Alle Warnungen
+                    </SelectedButton>
+                    <SelectedButton
+                            value="food"
+                            :selected="selected"
+                            @update:selected="updateSelected"
+                    >
+                        Lebensmittel
+                    </SelectedButton>
+                    <SelectedButton
+                            value="product"
+                            :selected="selected"
+                            @update:selected="updateSelected"
+                    >
+                        Produkte
+                    </SelectedButton>
+                </div>
+                <v-select
+                        label="Select"
+                        :items="['Baden-Württemberg',
+                                'Bayern',
+                                'Berlin',
+                                'Brandenburg',
+                                'Bremen',
+                                'Hamburg',
+                                'Hessen',
+                                'Mecklenburg-Vorpommern',
+                                'Niedersachsen',
+                                'Nordrhein-Westfalen',
+                                'Rheinland-Pfalz',
+                                'Saarland',
+                                'Sachsen',
+                                'Sachsen-Anhalt',
+                                'Schleswig-Holstein',
+                                'Thüringen']"
+                        style="max-width: 30vh;"
+                ></v-select>
             </v-col>
         </v-row>
         <v-container
@@ -79,7 +100,7 @@
                         :key="card_info"
                         cols="12"
                 >
-                    <v-card style="padding: 0px 10px;">
+                    <v-card style="padding: 0px 10px;" @click="showDetails = !showDetails; getDetails">
                         <v-list lines="two" style="
                                 text-overflow: ellipsis;
                                 display: flex;
@@ -139,6 +160,7 @@
 import {ref} from 'vue'
 import SelectedButton from "@/components/SelectedButton.vue";
 import SearchBar from "@/components/SearchBar.vue";
+import SideView from "@/components/SideView.vue";
 
 const drawer = ref(null);
 const selected = ref('all');
@@ -151,6 +173,10 @@ const handleSearch = (query) => {
 const updateSelected = (newValue) => {
     selected.value = newValue;
 };
+
+const getDetails = (cardValue) => {
+
+}
 
 const cards_info = [{
     "id": 7014,
@@ -213,7 +239,7 @@ const cards_info = [{
 export default {
     data: () => ({
         drawer: null,
-        cards: ['Monster Energy hat einen alarmierenden Koffeingehalt', 'Der EQS AMG 450 hat 2mm zu große Spaltmaße']
+        showDetails: false
     }),
 }
 </script>
