@@ -1,5 +1,6 @@
 :root {
-  --dark-mode-bg: rgb(247,255,247);
+  --dark-mode-lighter-bg: rgb(247,255,247);
+  --dark-mode-bg: rgb(240,244,240);
   --dark-mode-text: rgb(26, 83, 92);
   --dark-mode-red: rgb(255,107,107);
   --dark-mode-yellow: rgb(255,230,109);

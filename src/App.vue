@@ -4,7 +4,7 @@ import { VIcon } from 'vuetify/components'; // Import v-icon
 </script>
 
 <template>
-  <v-app id="anxiety">
+  <v-app id="app-container">
     <footer>
       <nav>
         <RouterLink to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
