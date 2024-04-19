@@ -1,5 +1,4 @@
 <template>
-    <v-app id="inspire">
         <v-navigation-drawer v-model="drawer">
             <v-list dense>
                 <v-list-item title="Dashboard"></v-list-item>
@@ -34,19 +33,19 @@
         <v-app-bar>
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-            <v-app-bar-title>Application</v-app-bar-title>
+            <v-app-bar-title>Dashboard</v-app-bar-title>
         </v-app-bar>
-
-        <v-main>
-            <!--  -->
-        </v-main>
-    </v-app>
 </template>
 
 <style>
 
+.v-navigation-drawer__scrim {
+    opacity: 0.0;
+}
+
 .topic-title {
     margin-left: 10px;
+    user-select: none;
 }
 
 .topic-container {

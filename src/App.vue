@@ -4,15 +4,18 @@ import { VIcon } from 'vuetify/components'; // Import v-icon
 </script>
 
 <template>
-  <footer>
-    <nav>
-      <RouterLink to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
-      <RouterLink to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
-      <RouterLink to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
-    </nav>
-  </footer>
+  <v-app id="anxiety">
+    <footer>
+      <nav>
+        <RouterLink to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
+        <RouterLink to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
+        <RouterLink to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
+      </nav>
+    </footer>
+
 
   <RouterView style="margin-bottom: calc(60px + 1rem);" />
+  </v-app>
 </template>
 
 <style scoped>
