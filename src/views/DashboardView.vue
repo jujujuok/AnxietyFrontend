@@ -45,11 +45,11 @@
                     class="d-flex justify-start"
             >
                 <SelectedButton
-                    v-for="button_text in buttons_texts"
-                    :key="button_text.value"
-                    :value="button_text.value"
-                    :selected="selected"
-                    @update:selected="selected = $event"
+                        v-for="button_text in buttons_texts"
+                        :key="button_text.value"
+                        :value="button_text.value"
+                        :selected="selected"
+                        @update:selected="selected = $event"
                 >
                     {{ button_text.text }}
                 </SelectedButton>
@@ -61,13 +61,20 @@
         >
             <v-row>
                 <v-col
-                        v-for="card in cards"
-                        :key="card"
+                        v-for="card_info in cards_info"
+                        :key="card_info"
                         cols="12"
                 >
-                    <v-card>
-                        <v-list lines="two">
-                            <v-list-subheader :title="card"></v-list-subheader>
+                    <v-card style="padding: 0px 10px;">
+                        <v-list lines="two" style="
+                                display: flex;
+                                overflow: hidden;
+                                justify-content: flex-start;
+                                align-items: center;">
+                            <v-icon v-if="card_info.type === 'food_warning'" style="justify-items: center;">
+                                mdi-food-apple
+                            </v-icon>
+                            <v-list-subheader :title="card_info.title"></v-list-subheader>
                         </v-list>
                     </v-card>
                 </v-col>
@@ -115,12 +122,65 @@ import SelectedButton from "@/components/SelectedButton.vue";
 const drawer = ref(null);
 const selected = ref('nearby');
 
-const cards = ['Monster Energy hat einen alarmierenden Koffeingehalt', 'Der EQS AMG 450 hat 2mm zu große Spaltmaße'];
+const cards_info = [{
+    "id": 7014,
+    "type": "food_warning",
+    "title": "Hautbleichmittel „Clinic Clear, Whitening Body Lotion\" der Marke „dodo cosmetics“",
+    "description": "Hydrochinon und Clobetasolpropionat",
+    "area": [
+        "Bayern"
+    ],
+    "details": {
+        "link": "https://www.lebensmittelwarnung.de/bvl-lmw-de/detail/kosmetische+mittel/75142",
+        "manufacturer": "Fa. Sandra Afro Shop",
+        "image": "https://www.lebensmittelwarnung.de/bvl-lmw-de/opensaga/attachment/5ed7765c-badf-4761-bc46-85ab2e7018ee/Produktbild1.png"
+    }
+},
+    {
+        "id": 7005,
+        "type": "food_warning",
+        "title": "BBQ Gewürzmischung 100g Dose",
+        "description": "Nicht gekennzeichnetes Allergen Sesam",
+        "area": [
+            "Baden-Württemberg",
+            "Hamburg",
+            "Hessen",
+            "Niedersachsen",
+            "Rheinland-Pfalz",
+            "Sachsen-Anhalt",
+            "Schleswig-Holstein"
+        ],
+        "details": {
+            "link": "https://www.lebensmittelwarnung.de/bvl-lmw-de/detail/lebensmittel/75050",
+            "manufacturer": "Curry- Gewürzmanufaktur Hafendamm 38 A 24937 Flensburg",
+            "image": "https://www.lebensmittelwarnung.de/bvl-lmw-de/opensaga/attachment/a514eb30-31c5-49de-9751-77f67c63d12c/BBQ Gewürzmischung.jpg"
+        }
+    },
+    {
+        "id": 20031,
+        "type": "food_warning",
+        "title": "„KHARTA – Yerba Mate“ mit dem Produktionsdatum (MAF) 10-2021 und dem Mindesthaltbarkeitsdatum (EXP) 09-2024 „KHARTA – Yerba Mate“ mit dem Produktionsdatum (MAF) 11-2021 und dem Mindesthaltbarkeitsdatum (EXP) 10-2024",
+        "description": "Es kann nicht ausgeschlossen werden, dass in dem Produkt erhöhte Rückstandsgehalte des Pflanzenschutzmittels Anthrachinon enthalten sind. Auf den Verzehr sollte daher vorsorglich verzichtet werden.",
+        "area": [
+            "Bayern",
+            "Hessen",
+            "Niedersachsen",
+            "Nordrhein-Westfalen",
+            "Sachsen",
+            "Sachsen-Anhalt",
+            "Thüringen"
+        ],
+        "details": {
+            "link": "https://www.lebensmittelwarnung.de/bvl-lmw-de/detail/lebensmittel/81136",
+            "manufacturer": "Fa. Orienta Foods Fa. Yarafood B.V., Enschede, NL",
+            "image": "https://www.lebensmittelwarnung.de/bvl-lmw-de/opensaga/attachment/03eb73e7-7a91-4f38-aec4-d6a4cc6cebd0/Produktbild.JPG"
+        }
+    }]
 
 const buttons_texts = [
-    { text: 'In der Nähe', value: 'nearby' },
-    { text: 'Deutschland', value: 'germany' },
-    { text: 'Bundesland', value: 'state' }
+    {text: 'In der Nähe', value: 'nearby'},
+    {text: 'Deutschland', value: 'germany'},
+    {text: 'Bundesland', value: 'state'}
 ];
 </script>
 
