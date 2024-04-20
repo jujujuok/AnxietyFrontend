@@ -43,8 +43,8 @@
                         cols="12"
                 >
                     <v-card style="padding: 0px 10px;" @click="handleCardClick(card_info)">
-                        <v-list two-line>
-                            <v-icon v-if="card_info.type === 'food_warning'">
+                        <v-list style="display: flex; padding: 2vh;">
+                            <v-icon style="margin-right: 1vh;" v-if="card_info.type === 'food_warning'">
                                 mdi-food-apple
                             </v-icon>
                             <v-list-item-title :title="card_info.title">{{ card_info.title }}</v-list-item-title>
