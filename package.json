@@ -15,6 +15,8 @@
     },
     "dependencies": {
         "@material/web": "^1.0.0",
+        "axios": "^1.6.8",
+        "dotenv": "^16.4.5",
         "npm": "^10.5.0",
         "swagger-ui": "^5.13.0",
         "vue": "^3.3.4",

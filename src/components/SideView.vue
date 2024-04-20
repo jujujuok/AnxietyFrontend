@@ -2,7 +2,7 @@
     <v-navigation-drawer style="width: 50vh;" v-model="showDetails" location="right">
         <v-card class="ma-5 pa-4" outlined>
             <v-img
-                    :src="data.details.image"
+                    :src="cardInfoDetails.image"
                     height="200px"
                     class="white--text align-end"
                     gradient="to top right, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -12,19 +12,19 @@
                 <v-list>
                     <v-list-item>
                         <v-icon>mdi-alert-octagon</v-icon>
-                        {{ data.description }}
+                        {{ cardInfoDetails.description }}
                     </v-list-item>
                     <v-list-item>
                         <v-icon>mdi-map-marker</v-icon>
-                        {{ data.area.join(', ') }}
+                        {{ cardInfoDetails.area && Array.isArray(cardInfoDetails.area) ? cardInfoDetails.area.join(', ') : 'No areas specified' }}
                     </v-list-item>
                     <v-list-item>
                         <v-icon>mdi-factory</v-icon>
-                        {{ data.details.manufacturer }}
+                        {{ cardInfoDetails.manufacturer }}
                     </v-list-item>
                     <v-list-item>
                         <v-list-item-action>
-                            <v-btn :href="data.details.link" text color="primary" style="width: 100%;">
+                            <v-btn :href="cardInfoDetails.link" text color="primary" style="width: 100%;">
                                 More Info
                             </v-btn>
                         </v-list-item-action>
@@ -36,19 +36,41 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref, defineProps } from 'vue';
+import DashboardInfoService from "@/services/dashboard-info-service.js";
 
-const data = ref({
-    "type": "food_warning",
-    "title": "Hautbleichmittel „Clinic Clear, Whitening Body Lotion\" der Marke „dodo cosmetics“",
-    "description": "Hydrochinon und Clobetasolpropionat",
-    "area": ["Bayern"],
-    "details": {
-        "link": "https://www.lebensmittelwarnung.de/bvl-lmw-de/detail/kosmetische+mittel/75142",
-        "manufacturer": "Fa. Sandra Afro Shop",
-        "image": "https://www.lebensmittelwarnung.de/bvl-lmw-de/opensaga/attachment/5ed7765c-badf-4761-bc46-85ab2e7018ee/Produktbild1.png"
-    }
+const props = defineProps({
+    cardInfoDetails: {
+        description: String,
+        area: Array(String),
+        link: String,
+        manufacturer: String,
+        image: String
+    },
+    showDetails: Boolean
 });
+
+console.log(props.cardInfoDetails.area);
+
+const fetchCardInfo = async (id) => {
+    DashboardInfoService.fetchCardDetailsById(id)
+        .then(response => {
+            setCardInfo(response.data);
+        })
+        .catch(error => {
+            console.error(`Error while fetching card details: ${error}`);
+        });
+}
+
+const setCardInfo = (data) => {
+    props.cardInfoDetails.value = {
+        description: `Representative for ${data.country}`,
+        area: [data.country],
+        link: '',  // Assuming there's no specific link in the response
+        manufacturer: '',  // Assuming no manufacturer information
+        image: data.image
+    }
+}
 
 const showDetails = ref(false);
 </script>
