@@ -3,6 +3,7 @@ class DashboardInfoService {
     async getDashboardInfos() {
         return axios.get('http://212.132.100.147:8000/dashboard')
             .then(response => {
+                console.log(response);
                 return response.data;
             })
             .catch(error => {

@@ -11,7 +11,7 @@
             <v-card-text>
                 <v-list>
                     <template v-for="(value, key) in cardInfoDetails">
-                        <v-list-item v-if="value && key !== 'image'">
+                        <v-list-item v-if="value && key !== 'image' && key !== 'link' && key !== 'type'">
                             <v-icon :icon="iconMapping[key]"></v-icon>
                             {{formatValue(key, value) }}
                         </v-list-item>
@@ -43,7 +43,11 @@ const iconMapping = {
     country: 'mdi-map-marker',
     manufacturer: 'mdi-factory',
     first_name: 'mdi-account',
-    last_name: 'mdi-account'
+    last_name: 'mdi-account',
+    hazard: 'mdi-alert-circle',
+    injury: 'mdi-hospital',
+    link: 'mdi-link',
+    category: 'mdi-tag'
 };
 
 const formatValue = (key, value) => {

@@ -8,11 +8,12 @@
                 <div class="button-container">
                     <!-- Dynamically render buttons based on the type -->
                     <SelectedButton
-                        v-for="btn in getSelectedButtonValues()"
-                        :key="btn.value"
-                        :value="btn.value"
-                        :selected="selected"
-                        @update:selected="updateSelected"
+                            v-for="btn in getSelectedButtonValues()"
+                            :key="btn.value"
+                            :value="btn.value"
+                            :selected="selected"
+                            @update:selected="updateSelected"
+                            @click="loadData();"
                     >
                         {{ btn.label }}
                     </SelectedButton>
@@ -25,7 +26,10 @@
             </v-col>
         </v-row>
         <v-container fluid>
-            <v-row>
+            <v-row v-if="isLoading">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            </v-row>
+            <v-row v-else>
                 <v-col
                         v-for="cardInfo in cardInfos"
                         :key="cardInfo.id"
@@ -47,12 +51,12 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import {onBeforeMount, ref} from 'vue';
 import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
-import { onBeforeRouteUpdate } from "vue-router";
-import { getCountryDataList } from "countries-list";
+import {onBeforeRouteUpdate} from "vue-router";
+import {getCountryData, getCountryDataList} from "countries-list";
 
 const props = defineProps({
     type: String,
@@ -61,6 +65,7 @@ const props = defineProps({
 
 let selected = ref(getSelectedButtonValues()[0].value);
 const cardInfos = ref([]);
+let isLoading = ref(false);
 const selectedCard = ref({});
 const showDetails = ref(false);
 
@@ -69,14 +74,14 @@ function updateSelected(newValue) {
 }
 
 const APIType = {
-  'travel-warnings': 'travel_warning',
-  'food-product-warnings': ['food_waring', 'product_warning'],
-  'embassies': 'country_representative',
-  'interpol': 'interpol_red'
+    'travel-warnings': 'travel_warning',
+    'food-product-warnings': ['food_warning', 'product_warning'],
+    'embassies': 'country_representative',
+    'interpol': 'interpol_red'
 };
 
 function getSelectedButtonValues() {
-    switch(props.type) {
+    switch (props.type) {
         case 'food-product-warnings':
             return [
                 {value: 'all', label: 'Alle Warnungen'},
@@ -91,42 +96,48 @@ function getSelectedButtonValues() {
     }
 }
 
-function setSelectButtonContent(dashboardType){
+function setSelectButtonContent(dashboardType) {
     switch (dashboardType) {
-        case 'food-product-warnings': return  [
-            'Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg',
-            'Hessen', 'Mecklenburg-Vorpommern', 'Niedersachsen', 'Nordrhein-Westfalen',
-            'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen'
-        ];
-        default: return getCountryDataList().map(
-            (countryList) => {
-                return countryList.name
-            }
-        );
+        case 'food-product-warnings':
+            return [
+                'Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg',
+                'Hessen', 'Mecklenburg-Vorpommern', 'Niedersachsen', 'Nordrhein-Westfalen',
+                'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen'
+            ];
+        default:
+            return getCountryDataList().map(
+                (countryList) => {
+                    return countryList.name
+                }
+            );
     }
 }
 
-function setIcon(cardType){
+function setIcon(cardType) {
     switch (cardType) {
-        case 'travel_warning': return 'mdi-airplane-takeoff';
-        case 'food_waring': return 'mdi-food-apple';
-        case 'product_warning': return 'mdi-package-variant';
-        case 'country_representative': return 'mdi-briefcase-account';
-        case 'interpol_red': return 'mdi-account-search';
-        default: return 'mdi-alert';
+        case 'travel_warning':
+            return 'mdi-airplane-takeoff';
+        case 'food_warning':
+            return 'mdi-food-apple';
+        case 'product_warning':
+            return 'mdi-package-variant';
+        case 'country_representative':
+            return 'mdi-briefcase-account';
+        case 'interpol_red':
+            return 'mdi-account-search';
+        default:
+            return 'mdi-alert';
     }
 }
 
 function openSideView(id) {
     try {
-        if(id != null && id > 0){
+        if (id != null && id > 0) {
             DashboardInfoService.fetchCardDetailsById(id).then(
                 (response) => {
-                    if(response.hasOwnProperty('details')){
-                        console.log(response.details);
-                        selectedCard.value = response.details;
-                        showDetails.value = true;
-                    }
+                    console.log(response);
+                    selectedCard.value = response;
+                    showDetails.value = true;
                 }
             );
         }
@@ -137,25 +148,45 @@ function openSideView(id) {
 
 async function loadData() {
     try {
+        isLoading.value = true;
         const data = await DashboardInfoService.getDashboardInfos();
-        const filter = APIType[props.type];
-        if(props.type === 'food-product-warnings'){
-            cardInfos.value = data.filter((card) => card.type === filter[0] || card.type === filter[1]);
+        const filters = APIType[props.type];
+
+        //if the dashboard is for food and product warnings
+        if (props.type === 'food-product-warnings') {
+            switch (selected.value) {
+                case 'food':
+                    cardInfos.value = data.filter((card) => card.type === filters[0]);
+                    break;
+                case 'product':
+                    cardInfos.value = data.filter((card) => card.type === filters[1]);
+                    break;
+                case 'all':
+                default:
+                    cardInfos.value = data.filter((card) => card.type === filters[0] || card.type === filters[1]);
+                    break;
+            }
         } else {
-            cardInfos.value = data.filter((card) => card.type === filter);
+            //TODO other selected buttons
+            cardInfos.value = data.filter((card) => card.type === filters);
         }
     } catch (error) {
         console.error('Error fetching dashboard infos:', error);
+    } finally {
+        isLoading.value = false;
     }
 }
+
 onBeforeRouteUpdate(async () => {
     selected = ref(getSelectedButtonValues()[0].value);
-    loadData();
+    await loadData();
 });
 
 onBeforeMount(async () => {
     selected = ref(getSelectedButtonValues()[0].value);
-    loadData();
+    console.log(isLoading);
+    await loadData();
+    console.log(isLoading);
 });
 </script>
 
