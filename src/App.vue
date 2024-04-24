@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import { VIcon } from 'vuetify/components'; // Import v-icon
+
 </script>
 
 <template>

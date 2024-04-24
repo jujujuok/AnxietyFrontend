@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import TravelWarnings from "@/components/DashboardContent.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,9 +16,15 @@ const router = createRouter({
       component: () => import('../views/MapView.vue')
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/',
+      name: 'dashboard_default',
+      redirect: '/dashboard/food-product-warnings'
+    },
+    {
+      path: '/dashboard/:type',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
+      component: () => import('../views/DashboardView.vue'),
+      props: true
     },
     {
       path: '/:catchAll(.*)',

@@ -3,30 +3,39 @@
         <v-list dense>
             <v-list-item title="Dashboard"></v-list-item>
             <v-divider></v-divider>
-            <v-list-item link @click="setComponent('FoodProductWarnings')">
-                <div class="topic-container">
-                    <v-icon class="topic-content">mdi-food-apple</v-icon>
-                    <v-list-item-title class="topic-content topic-title">Produkt- und Lebensmittelwarnungen</v-list-item-title>
-                </div>
-            </v-list-item>
-            <v-list-item link @click="setComponent('TravelWarnings')">
-                <div class="topic-container">
-                    <v-icon class="topic-content">mdi-alert-circle</v-icon>
-                    <v-list-item-title class="topic-content topic-title">Reisewarnungen</v-list-item-title>
-                </div>
-            </v-list-item>
-            <v-list-item link @click="setComponent('Embassies')">
-                <div class="topic-container">
-                    <v-icon class="topic-content">mdi-briefcase-account</v-icon>
-                    <v-list-item-title class="topic-content topic-title">Botschaften</v-list-item-title>
-                </div>
-            </v-list-item>
-            <v-list-item link @click="setComponent('Interpol')">
-                <div class="topic-container">
-                    <v-icon class="topic-content">mdi-account-search</v-icon>
-                    <v-list-item-title class="topic-content topic-title">Interpol</v-list-item-title>
-                </div>
-            </v-list-item>
+            <RouterLink class="router-link" to="food-product-warnings">
+                <v-list-item @click="drawer = false;">
+                    <div class="topic-container">
+                        <v-icon class="topic-content">mdi-food-apple</v-icon>
+                        <v-list-item-title class="topic-content topic-title">Produkt- und Lebensmittelwarnungen
+                        </v-list-item-title>
+                    </div>
+                </v-list-item>
+            </RouterLink>
+            <RouterLink class="router-link" to="travel-warnings">
+                <v-list-item @click="drawer = false;">
+                    <div class="topic-container">
+                        <v-icon class="topic-content">mdi-alert-circle</v-icon>
+                        <v-list-item-title class="topic-content topic-title">Reisewarnungen</v-list-item-title>
+                    </div>
+                </v-list-item>
+            </RouterLink>
+            <RouterLink class="router-link" to="embassies">
+                <v-list-item @click="drawer = false;">
+                    <div class="topic-container">
+                        <v-icon class="topic-content">mdi-briefcase-account</v-icon>
+                        <v-list-item-title class="topic-content topic-title">Botschaften</v-list-item-title>
+                    </div>
+                </v-list-item>
+            </RouterLink>
+            <RouterLink class="router-link" to="interpol">
+                <v-list-item @click="drawer = false;">
+                    <div class="topic-container">
+                        <v-icon class="topic-content">mdi-account-search</v-icon>
+                        <v-list-item-title class="topic-content topic-title">Interpol</v-list-item-title>
+                    </div>
+                </v-list-item>
+            </RouterLink>
         </v-list>
     </v-navigation-drawer>
 
@@ -36,13 +45,14 @@
         <SearchBar/>
     </v-app-bar>
 
-    <FoodProductWarning v-if="currentComponent === 'FoodProductWarnings'" />
-    <TravelWarnings v-else-if="currentComponent === 'TravelWarnings'" />
-    <Embassies v-else-if="currentComponent === 'Embassies'" />
-    <Interpol v-else-if="currentComponent === 'Interpol'" />
+    <DashboardContent :type="type"></DashboardContent>
 </template>
 
 <style>
+
+.router-link {
+    color: var(--dark-mode-text);
+}
 
 .v-list-subheader__text {
     white-space: normal;
@@ -82,18 +92,18 @@
 <script setup>
 import {ref} from 'vue'
 import SearchBar from "@/components/SearchBar.vue";
-import FoodProductWarning from "@/components/FoodProductWarnings.vue";
-import TravelWarnings from "@/components/TravelWarnings.vue";
-import Embassies from "@/components/Embassies.vue";
-import Interpol from "@/components/Interpol.vue";
+import {RouterLink} from "vue-router";
+import {VIcon} from "vuetify/components";
+import DashboardContent from "@/components/DashboardContent.vue";
 
 const drawer = ref(false);
 const currentComponent = ref('FoodProductWarnings');
 const searchResults = ref([]);
 
-function setComponent(componentName) {
-    currentComponent.value = componentName;
-    drawer.value = false;}
+const props = defineProps({
+    type: String,
+    required: true
+})
 
 </script>
 
