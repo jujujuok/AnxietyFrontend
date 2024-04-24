@@ -26,7 +26,7 @@
             </v-col>
         </v-row>
         <v-container fluid>
-            <v-row v-if="isLoading">
+            <v-row v-if="isLoading" class="loading-indicator-row">
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </v-row>
             <v-row v-else>
@@ -191,6 +191,12 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
+.loading-indicator-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .v-list-subheader__text {
     white-space: normal;
     font-weight: bold;
