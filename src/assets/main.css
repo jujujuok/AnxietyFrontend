@@ -2,8 +2,9 @@
 
 #app {
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   font-weight: bold;
+  position: relative;
 }
 
 a, 

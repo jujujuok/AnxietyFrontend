@@ -1,109 +1,21 @@
 <script setup lang="ts">
 
-// --- MATERIAL IMPORTS ---
-import '@material/web/list/list'
-import '@material/web/list/list-item'
-
-// --- ICONS ---
-// import WeatherIcon from './icons/IconWeather.vue'
-
-// --- COMPONENTS ---
-import DashboardEntry from '@/components/DashboardEntry.vue';
-
-
-
-abstract class DashboardItemStruct {
-  color: string = "#aaaaaa"
-  icon: string = "default-icon"
-  iid: number
-  title: string
-  date: Date
-  description: string
-  location: string
-
-  constructor(iid: number, title: string, date: Date, description: string, location: string) {
-    this.iid = iid
-    this.title = title
-    this.date = date
-    this.description = description
-    this.location = location
-  }
-}
-
-class WeatherStruct extends DashboardItemStruct {
-  constructor(iid: number, title: string, date: Date, description: string, location: string) {
-    super(iid, title, date, description, location)
-    this.color = "#800080"
-    this.icon = "weather-icon"
-  }
-}
-
-class InterpolRedNoticeStruct extends DashboardItemStruct {
-  constructor(iid: number, title: string, date: Date, description: string, location: string) {
-    super(iid, title, date, description, location)
-    this.color = "#aa2020"
-    this.icon = "red-notice-icon"
-  }
-}
-
-
-const entries = [
-  new WeatherStruct(1, "Hochwasser", new Date(), "Es regnet in Deutschland", "Deutschland"),
-  new WeatherStruct(2, "Erdbeben", new Date(), "Es regnet in Panama", "Panama"),
-  new InterpolRedNoticeStruct(3, "Kevin", new Date(), "20 Jahre, zuletzt gesehen beim Kuchen essen", "Deutschland"),
-  new InterpolRedNoticeStruct(4, "Maximilian bvs", new Date(), "19 Jahre, Steuerhinterziehung", "Panama")
-];
-
 </script>
 
 <template>
   <div class="dashboard">
     <h1 class="green">Dashboard</h1>
-    <md-list v-if="entries"> <!-- todo: if there are entries -->
-      <DashboardEntry class="entry blue" v-for="entry in entries" 
-      :key="entry.iid" 
-      :color="entry.color" 
-      :icon="entry.icon" 
-      :iid="entry.iid"
-      :title="entry.title" 
-      :date="entry.date" 
-      :description="entry.description"
-      :location="entry.location" />
-    </md-list>
-    <div v-else>
-      <p>Keine Katastrophe vorhanden</p>
-    </div>
+
+    <v-btn-toggle stacked background-color="primary" dark multiple>
+      <v-btn value="radioactive" icon="mdi-radioactive"></v-btn>
+      <v-btn value="air" icon="mdi-weather-windy"></v-btn>
+      <v-btn value="interpol" icon="mdi-police-badge"></v-btn>
+      <v-btn value="autobahn" icon="mdi-car"></v-btn>
+      <v-btn value="weather_warnings" icon="mdi-weather-lightning-rainy"></v-btn>
+      <!-- <pre>{{ toggleMultiple }}</pre> -->
+    </v-btn-toggle>
   </div>
 </template>
 
 <style scoped>
-
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 95%;
-}
-
-.dashboard .entry {
-  flex: 1;
-  background-color: var(--dashboard-entry-color); /** todo: dynamically with type of entry */
-  padding: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 95%;
-}
-
-div {
-  display: grid;
-  place-items: center;
-}
-
-p {
-  font-size: 0.8rem;
-  font-family: 'Roboto Mono', monospace;
-}
 </style>

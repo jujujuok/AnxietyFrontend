@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
-import { VIcon } from 'vuetify/components'; // Import v-icon
+import { VIcon } from 'vuetify/components'; 
 </script>
 
 <template>
@@ -8,6 +8,7 @@ import { VIcon } from 'vuetify/components'; // Import v-icon
     <nav>
       <RouterLink to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
       <RouterLink to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
+      <RouterLink to="/world"><v-icon icon="mdi-earth"></v-icon></RouterLink>
       <RouterLink to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
     </nav>
   </footer>
