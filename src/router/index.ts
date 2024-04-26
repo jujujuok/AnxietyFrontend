@@ -24,7 +24,7 @@ const router = createRouter({
       path: '/dashboard/:type',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue'),
-      props: true
+      props: route => ({ type: route.params.type })
     },
     {
       path: '/:catchAll(.*)',

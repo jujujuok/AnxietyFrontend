@@ -3,8 +3,8 @@
         <v-list dense>
             <v-list-item title="Dashboard"></v-list-item>
             <v-divider></v-divider>
-            <RouterLink class="router-link" to="food-product-warnings">
-                <v-list-item @click="drawer = false;">
+            <RouterLink :to="{name: 'dashboard', params: {type: 'food-product-warnings'}}">
+                <v-list-item @click="drawer = false; router.push('/dashboard/food-product-warnings');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-food-apple</v-icon>
                         <v-list-item-title class="topic-content topic-title">Produkt- und Lebensmittelwarnungen
@@ -12,24 +12,24 @@
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink class="router-link" to="travel-warnings">
-                <v-list-item @click="drawer = false;">
+            <RouterLink :to="{name: 'dashboard', params: {type: 'travel-warnings'}}">
+                <v-list-item @click="drawer = false; router.push('/dashboard/travel-warnings');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-alert-circle</v-icon>
                         <v-list-item-title class="topic-content topic-title">Reisewarnungen</v-list-item-title>
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink class="router-link" to="embassies">
-                <v-list-item @click="drawer = false;">
+            <RouterLink :to="{name: 'dashboard', params: {type: 'embassies'}}">
+                <v-list-item @click="drawer = false; router.push('/dashboard/embassies');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-briefcase-account</v-icon>
                         <v-list-item-title class="topic-content topic-title">Botschaften</v-list-item-title>
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink class="router-link" to="interpol">
-                <v-list-item @click="drawer = false;">
+            <RouterLink :to="{name: 'dashboard', params: {type: 'interpol'}}">
+                <v-list-item @click="drawer = false; router.push('/dashboard/interpol');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-account-search</v-icon>
                         <v-list-item-title class="topic-content topic-title">Interpol</v-list-item-title>
@@ -92,12 +92,13 @@
 <script setup>
 import {ref} from 'vue'
 import SearchBar from "@/components/SearchBar.vue";
-import {RouterLink} from "vue-router";
+import {RouterLink, useRouter} from "vue-router";
 import {VIcon} from "vuetify/components";
 import DashboardContent from "@/components/DashboardContent.vue";
+import "@/views/DashboardView.vue";
 
 const drawer = ref(false);
-const currentComponent = ref('FoodProductWarnings');
+const router = useRouter();
 const searchResults = ref([]);
 
 const props = defineProps({

@@ -56,11 +56,11 @@ import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
 import {onBeforeRouteUpdate} from "vue-router";
-import {getCountryData, getCountryDataList} from "countries-list";
+import {getCountryDataList} from "countries-list";
 
 const props = defineProps({
     type: String,
-    required: true
+    required: Boolean
 });
 
 let selected = ref(getSelectedButtonValues()[0].value);
@@ -151,6 +151,7 @@ function openSideView(id) {
 
 function filterData(){
     const filters = APIType[props.type];
+    console.log(`Type: ${props.type}`);
 
     //if the dashboard is for food and product warnings
     if (props.type === 'food-product-warnings') {
@@ -164,7 +165,7 @@ function filterData(){
                 break;
             case 'all':
             default:
-                cardInfos.value = unfilteredData.filter((card) => card.type === filters[0] || card.type === filters[1]);
+                cardInfos.value = unfilteredData.filter((card) => (selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]) || card.type === filters[1]);
                 break;
         }
     } else {
@@ -189,13 +190,13 @@ async function loadData() {
 
 onBeforeRouteUpdate(async () => {
     selected = ref(getSelectedButtonValues()[0].value);
-    await loadData();
+    loadData();
 });
 
 onBeforeMount(async () => {
     selected = ref(getSelectedButtonValues()[0].value);
     console.log(isLoading);
-    await loadData();
+    loadData();
     console.log(isLoading);
 });
 
