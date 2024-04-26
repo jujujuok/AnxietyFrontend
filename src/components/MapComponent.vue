@@ -8,8 +8,7 @@ let props = defineProps({
   start_lon: Number,
   start_lat: Number,
   zoom_start: Number,
-  url: String,
-  areas: [],
+  url: String
 })
 
 async function callApi(url) {
@@ -24,7 +23,6 @@ async function callApi(url) {
   }
 }
 
-
 const map = L.Map;
 
 onMounted(async () => {
@@ -34,9 +32,6 @@ onMounted(async () => {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map.value);
 
-
-  // ------------ ITEMS API --------------------
-
   callApi(props.url)
     .then(data => {
       console.log("API DATA", data);
@@ -45,8 +40,6 @@ onMounted(async () => {
         let item_color = 'red';
         let pop = item.title;
         let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
-
-        // area is of type e.g. Array(37) [2]
 
         switch (item.type) {
           case "nina":
@@ -63,39 +56,20 @@ onMounted(async () => {
             break;
         }
 
-        console.log("item in map component", item)
-
         const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
         polygon.bindPopup(pop);
+        polygon.on('mouseover', function (e) {
+          polygon.setStyle({ fillOpacity: 0.7 });
+        });
+        polygon.on('mouseout', function (e) {
+          polygon.setStyle({ fillOpacity: 0.2 });
+        });
       });
 
     })
     .catch(error => {
       console.error("Error occurred:", error);
     });
-
-
-  // --------------------- coords example
-  props.areas.forEach(coords => {
-    const polygon = L.polygon(coords, { color: 'red' }).addTo(map.value);
-
-    polygon.bindPopup('This is a polygon');
-
-    // // Hover effect
-    polygon.on('mouseover', function (e) {
-      polygon.setStyle({ fillOpacity: 0.7 });
-    });
-    polygon.on('mouseout', function (e) {
-      polygon.setStyle({ fillOpacity: 0.2 });
-    });
-  });
-
-  L.marker([50.0000, 8.6821]).addTo(map.value);
-  L.marker([49.1234, 8.6821],).addTo(map.value);
-
-  // L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
-  // L.polygon(latlngs, { color: 'red' }).addTo(map.value);
-
 });
 </script>
 

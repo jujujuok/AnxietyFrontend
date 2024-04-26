@@ -4,28 +4,6 @@ import MapComponent from "@/components/MapComponent.vue"
 import FilterComponent from '@/components/FilterComponent.vue'
 import "leaflet/dist/leaflet.css";
 
-const coordinates = [
-  [
-    [
-      [
-        8.2,
-        48.7
-      ],
-      [
-        8.9,
-        48.7
-      ],
-      [
-        8.0,
-        50.0
-      ]
-    ].map(array => array.reverse())
-  ]
-]
-
-    console.log("Coordinate Format: ", coordinates);
-
-
 const url = "http://api.risiko-radar.info/map";
 
 </script>
@@ -35,7 +13,7 @@ const url = "http://api.risiko-radar.info/map";
   <FilterComponent :names="filter_names" :icons="filter_icons" />
 
   <div id="container">
-    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :areas="coordinates" :url="url" />
+    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :url="url" />
   </div>
 </template>
 
