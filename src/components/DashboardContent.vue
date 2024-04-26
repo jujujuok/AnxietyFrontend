@@ -19,8 +19,9 @@
                     </SelectedButton>
                 </div>
                 <v-select
-                        label="Select"
+                        v-model="selectedArea"
                         :items="setSelectButtonContent(type)"
+                        label="Select"
                         class="select-area"
                 ></v-select>
             </v-col>
@@ -51,7 +52,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, ref} from 'vue';
+import {onBeforeMount, ref, watch} from 'vue';
 import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
@@ -68,6 +69,7 @@ const cardInfos = ref([]);
 let isLoading = ref(false);
 const selectedCard = ref({});
 const showDetails = ref(false);
+const selectedArea = ref(null);
 
 function updateSelected(newValue) {
     selected.value = newValue;
@@ -146,30 +148,37 @@ function openSideView(id) {
     }
 }
 
+function filterData(data){
+    const filters = APIType[props.type];
+
+    //if the dashboard is for food and product warnings
+    if (props.type === 'food-product-warnings') {
+        switch (selected.value) {
+            case 'food':
+                console.log(cardInfos.value);
+                cardInfos.value = data.filter((card) => selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]);
+                break;
+            case 'product':
+                cardInfos.value = data.filter((card) => card.type === filters[1]);
+                break;
+            case 'all':
+            default:
+                cardInfos.value = data.filter((card) => card.type === filters[0] || card.type === filters[1]);
+                break;
+        }
+    } else {
+        //TODO other selected buttons
+        cardInfos.value = data.filter((card) => card.type === filters);
+    }
+}
+
 async function loadData() {
     try {
         isLoading.value = true;
         const data = await DashboardInfoService.getDashboardInfos();
-        const filters = APIType[props.type];
 
-        //if the dashboard is for food and product warnings
-        if (props.type === 'food-product-warnings') {
-            switch (selected.value) {
-                case 'food':
-                    cardInfos.value = data.filter((card) => card.type === filters[0]);
-                    break;
-                case 'product':
-                    cardInfos.value = data.filter((card) => card.type === filters[1]);
-                    break;
-                case 'all':
-                default:
-                    cardInfos.value = data.filter((card) => card.type === filters[0] || card.type === filters[1]);
-                    break;
-            }
-        } else {
-            //TODO other selected buttons
-            cardInfos.value = data.filter((card) => card.type === filters);
-        }
+        filterData(data);
+
     } catch (error) {
         console.error('Error fetching dashboard infos:', error);
     } finally {
@@ -187,6 +196,10 @@ onBeforeMount(async () => {
     console.log(isLoading);
     await loadData();
     console.log(isLoading);
+});
+
+watch(selectedArea, (newSelected, oldSelected) => {
+    filterData(cardInfos.value);
 });
 </script>
 
