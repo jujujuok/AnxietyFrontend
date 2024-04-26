@@ -35,7 +35,7 @@
                         :key="cardInfo.id"
                         cols="12"
                 >
-                    <v-card style="padding: 0px 10px;" @click="openSideView(cardInfo.id)">
+                    <v-card style="padding: 0 10px;" @click="openSideView(cardInfo.id)">
                         <v-list style="display: flex; padding: 2vh;">
                             <v-icon style="margin-right: 1vh;">
                                 {{ setIcon(cardInfo.type) }}
@@ -71,7 +71,7 @@ const showDetails = ref(false);
 const selectedArea = ref(null);
 let unfilteredData = [];
 
-function updateSelected(newValue) {
+async function updateSelected(newValue) {
     selected.value = newValue;
     filterData();
 }
@@ -191,12 +191,12 @@ async function loadData() {
 }
 
 onBeforeRouteUpdate(async () => {
-    selected = ref(getSelectedButtonValues()[0].value);
+    selected.value = getSelectedButtonValues()[0].value;
     loadData();
 });
 
 onBeforeMount(async () => {
-    selected = ref(getSelectedButtonValues()[0].value);
+    selected.value = getSelectedButtonValues()[0].value;
     console.log(isLoading);
     loadData();
     console.log(isLoading);
