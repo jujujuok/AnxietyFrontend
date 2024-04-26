@@ -15,7 +15,7 @@ const filter_icons = [""];
   <FilterComponent :names="filter_names" :icons="filter_icons" />
 
   <div id="container">
-    <MapComponent :start_lon="29.718582" :start_lat="19.152399" :zoom_start="2"/>
+    <MapComponent :start_lon="29.718582" :start_lat="19.152399" :zoom_start="2" />
   </div>
 </template>
 

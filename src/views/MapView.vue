@@ -1,6 +1,5 @@
 <script setup>
 
-import { ref } from 'vue';
 import MapComponent from "@/components/MapComponent.vue"
 import FilterComponent from '@/components/FilterComponent.vue'
 import "leaflet/dist/leaflet.css";
@@ -39,32 +38,23 @@ async function callApi(url) {
   }
 }
 
+let map_items = []
+
 callApi(url)
   .then(data => {
-    // console.log("API DATA", data);
+    console.log("API DATA", data);
 
     data.forEach(item => {
-      // console.log("ID:", item.id);
-      // console.log("Type:", item.type);
-      // console.log("Warning:", item.warning);
-      console.log("area:",item.area)
-
-      // coordinates[0][0].push(item.area.map(array => array.reverse()))
+      map_items.push(item)
     });
 
+    console.log("Coordinate Format: ", coordinates);
+    console.log("Number of items: ", map_items.length);
   })
   .catch(error => {
     console.error("Error occurred:", error);
   });
 
-
-console.log("API DATA", data)
-
-
-
-
-const filter_names = ["radioactive", "air", "interpol", "autobahn", "weather_warnings"];
-const filter_icons = ["mdi-radioactive", "mdi-weather-windy", "mdi-police-badge", "mdi-car", "mdi-weather-lightning-rainy"];
 </script>
 
 
@@ -72,10 +62,13 @@ const filter_icons = ["mdi-radioactive", "mdi-weather-windy", "mdi-police-badge"
   <FilterComponent :names="filter_names" :icons="filter_icons" />
 
   <div id="container">
-    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :areas="coordinates" />
+    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :areas="coordinates" :items="map_items" />
   </div>
 </template>
 
+<!-- todo dynamic filter
+const filter_names = ["radioactive", "air", "interpol", "autobahn", "weather_warnings"];
+const filter_icons = ["mdi-radioactive", "mdi-weather-windy", "mdi-police-badge", "mdi-car", "mdi-weather-lightning-rainy"]; -->
 
 
 <style>

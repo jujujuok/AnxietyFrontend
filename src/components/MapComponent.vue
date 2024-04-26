@@ -1,21 +1,19 @@
-<script setup lang="ts">
+<script setup>
 
 import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 
-let props = defineProps<{
-  start_lon: number
-  start_lat: number
-  zoom_start: number
-  pins?: Array<number>
-  areas?: []
-  title?: string
-  likes?: number
-}>();
+let props = defineProps({
+  start_lon: Number,
+  start_lat: Number,
+  zoom_start: Number,
+  items: [],
+  areas: [],
+})
 
-const map = ref({} as L.Map);
 
+const map = L.Map;
 
 onMounted(() => {
   map.value = L.map('map').setView([props.start_lon, props.start_lat], props.zoom_start);
@@ -24,12 +22,38 @@ onMounted(() => {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map.value);
 
-  L.marker([50.0000, 8.6821]).addTo(map.value);
-  L.marker([49.1234, 8.6821],).addTo(map.value);
+  console.log( "item length : ",props.items.length)
 
-  // L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
-  // L.polygon(latlngs, { color: 'red' }).addTo(map.value);
+  // ------------ ITEMS API --------------------
+  props.items.forEach(item => {
+    let item_color = "";
+    let pop = "";
+    let coords = [item.area.map(array => array.reverse())];
 
+    // switch (item.type) {
+    //   case "nina":
+    //     color = 'blue';
+    //     break;
+    //   case "weather":
+    //     color = 'green';
+    //     break;
+    //   case "street_report":
+    //     color = 'yellow';
+    //     break;
+    //   default:
+    //     color = 'red'; 
+    //     break;
+    // }
+
+    console.log("item in map component", item)
+
+    const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
+    polygon.bindPopup(pop);
+  });
+
+
+
+  // --------------------- coords example
   props.areas.forEach(coords => {
     const polygon = L.polygon(coords, { color: 'red' }).addTo(map.value);
 
@@ -37,12 +61,18 @@ onMounted(() => {
 
     // // Hover effect
     polygon.on('mouseover', function (e) {
-      this.setStyle({ fillOpacity: 0.7 });
+      polygon.setStyle({ fillOpacity: 0.7 });
     });
     polygon.on('mouseout', function (e) {
-      this.setStyle({ fillOpacity: 0.2 });
+      polygon.setStyle({ fillOpacity: 0.2 });
     });
   });
+
+  L.marker([50.0000, 8.6821]).addTo(map.value);
+  L.marker([49.1234, 8.6821],).addTo(map.value);
+
+  // L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
+  // L.polygon(latlngs, { color: 'red' }).addTo(map.value);
 
 });
 </script>
