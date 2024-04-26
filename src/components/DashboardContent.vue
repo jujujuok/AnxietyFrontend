@@ -13,7 +13,6 @@
                             :value="btn.value"
                             :selected="selected"
                             @update:selected="updateSelected"
-                            @click="loadData();"
                     >
                         {{ btn.label }}
                     </SelectedButton>
@@ -70,9 +69,11 @@ let isLoading = ref(false);
 const selectedCard = ref({});
 const showDetails = ref(false);
 const selectedArea = ref(null);
+let unfilteredData = [];
 
 function updateSelected(newValue) {
     selected.value = newValue;
+    filterData();
 }
 
 const APIType = {
@@ -148,7 +149,7 @@ function openSideView(id) {
     }
 }
 
-function filterData(data){
+function filterData(){
     const filters = APIType[props.type];
 
     //if the dashboard is for food and product warnings
@@ -156,28 +157,28 @@ function filterData(data){
         switch (selected.value) {
             case 'food':
                 console.log(cardInfos.value);
-                cardInfos.value = data.filter((card) => selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]);
+                cardInfos.value = unfilteredData.filter((card) => selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]);
                 break;
             case 'product':
-                cardInfos.value = data.filter((card) => card.type === filters[1]);
+                cardInfos.value = unfilteredData.filter((card) => card.type === filters[1]);
                 break;
             case 'all':
             default:
-                cardInfos.value = data.filter((card) => card.type === filters[0] || card.type === filters[1]);
+                cardInfos.value = unfilteredData.filter((card) => card.type === filters[0] || card.type === filters[1]);
                 break;
         }
     } else {
         //TODO other selected buttons
-        cardInfos.value = data.filter((card) => card.type === filters);
+        cardInfos.value = unfilteredData.filter((card) => card.type === filters);
     }
 }
 
 async function loadData() {
     try {
         isLoading.value = true;
-        const data = await DashboardInfoService.getDashboardInfos();
+        unfilteredData = await DashboardInfoService.getDashboardInfos();
 
-        filterData(data);
+        filterData();
 
     } catch (error) {
         console.error('Error fetching dashboard infos:', error);
@@ -198,8 +199,8 @@ onBeforeMount(async () => {
     console.log(isLoading);
 });
 
-watch(selectedArea, (newSelected, oldSelected) => {
-    filterData(cardInfos.value);
+watch(selectedArea, () => {
+    filterData();
 });
 </script>
 
