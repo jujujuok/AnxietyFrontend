@@ -8,49 +8,71 @@ let props = defineProps({
   start_lon: Number,
   start_lat: Number,
   zoom_start: Number,
-  items: [],
+  url: String,
   areas: [],
 })
+
+async function callApi(url) {
+  const headers = {
+    'accept': 'application/json'
+  };
+
+  const response = await fetch(url, { headers });
+
+  if (response.ok) {
+    return await response.json();
+  }
+}
 
 
 const map = L.Map;
 
-onMounted(() => {
+onMounted(async () => {
   map.value = L.map('map').setView([props.start_lon, props.start_lat], props.zoom_start);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map.value);
 
-  console.log( "item length : ",props.items.length)
 
   // ------------ ITEMS API --------------------
-  props.items.forEach(item => {
-    let item_color = "";
-    let pop = "";
-    let coords = [item.area.map(array => array.reverse())];
 
-    // switch (item.type) {
-    //   case "nina":
-    //     color = 'blue';
-    //     break;
-    //   case "weather":
-    //     color = 'green';
-    //     break;
-    //   case "street_report":
-    //     color = 'yellow';
-    //     break;
-    //   default:
-    //     color = 'red'; 
-    //     break;
-    // }
+  callApi(props.url)
+    .then(data => {
+      console.log("API DATA", data);
 
-    console.log("item in map component", item)
+      data.forEach(item => {
+        let item_color = 'red';
+        let pop = item.title;
+        let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
 
-    const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
-    polygon.bindPopup(pop);
-  });
+        // area is of type e.g. Array(37) [2]
 
+        switch (item.type) {
+          case "nina":
+            item_color = 'blue';
+            break;
+          case "weather":
+            item_color = 'green';
+            break;
+          case "street_report":
+            item_color = 'purple';
+            break;
+          default:
+            item_color = 'red';
+            break;
+        }
+
+        console.log("item in map component", item)
+
+        const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
+        polygon.bindPopup(pop);
+      });
+
+    })
+    .catch(error => {
+      console.error("Error occurred:", error);
+    });
 
 
   // --------------------- coords example
