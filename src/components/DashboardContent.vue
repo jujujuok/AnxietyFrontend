@@ -175,6 +175,8 @@ function filterData(){
 }
 
 async function loadData() {
+    console.log(props.type)
+
     try {
         isLoading.value = true;
         unfilteredData = await DashboardInfoService.getDashboardInfos();

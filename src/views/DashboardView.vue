@@ -45,7 +45,7 @@
         <SearchBar/>
     </v-app-bar>
 
-    <DashboardContent :type="type"></DashboardContent>
+    <DashboardContent :type="type"/>
 </template>
 
 <style>
@@ -103,16 +103,7 @@ const searchResults = ref([]);
 
 const props = defineProps({
     type: String,
-    required: true
+    required: Boolean
 })
 
-</script>
-
-<script>
-export default {
-    data: () => ({
-        drawer: null,
-        showDetails: false
-    }),
-}
 </script>
