@@ -1,48 +1,76 @@
-<script setup lang="ts">
+<script setup>
 
 import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 
-let props = defineProps<{
-  start_lon: number
-  start_lat: number
-  pins?: Array<number>
-  areas?: Array<number>
-  title?: string
-  likes?: number
-}>();
+let props = defineProps({
+  start_lon: Number,
+  start_lat: Number,
+  zoom_start: Number,
+  url: String,
+  filter: ref,
+})
 
-const map = ref({} as L.Map);
+async function callApi(url) {
+  const headers = {
+    'accept': 'application/json'
+  };
 
+  const response = await fetch(url, { headers });
 
-onMounted(() => {
-  map.value = L.map('map').setView([props.start_lon, props.start_lat], 6);
+  if (response.ok) {
+    return await response.json();
+  }
+}
+
+const map = L.Map;
+
+onMounted(async () => {
+  map.value = L.map('map').setView([props.start_lon, props.start_lat], props.zoom_start);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map.value);
 
-  L.marker([50.0000, 8.6821]).addTo(map.value);
-  L.marker([49.1234, 8.6821],).addTo(map.value);
+  callApi(props.url)
+    .then(data => {
 
-  // L.polygon(latlngs2, { color: 'blue' }).addTo(map.value);
-  // L.polygon(latlngs, { color: 'red' }).addTo(map.value);
+      data.forEach(item => {
+        let item_color = 'red';
+        let pop = item.title;
+        let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
+        console.log("filter: ", props.filter, "item type: ", item.type)
 
-  // coordinates.forEach(coords => {
-  //   const polygon = L.polygon(coords, { color: 'red' }).addTo(map.value);
+        switch (item.type) {
+          case "nina":
+            item_color = 'blue';
+            break;
+          case "weather":
+            item_color = 'green';
+            break;
+          case "street_report":
+            item_color = 'purple';
+            break;
+          default:
+            item_color = 'red';
+            break;
+        }
 
-  //   polygon.bindPopup('This is a polygon');
+        const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
+        polygon.bindPopup(pop);
+        polygon.on('mouseover', function (e) {
+          polygon.setStyle({ fillOpacity: 0.7 });
+        });
+        polygon.on('mouseout', function (e) {
+          polygon.setStyle({ fillOpacity: 0.2 });
+        });
+      });
 
-  //   // // Hover effect
-  //   polygon.on('mouseover', function (e) {
-  //     this.setStyle({ fillOpacity: 0.7 });
-  //   });
-  //   polygon.on('mouseout', function (e) {
-  //     this.setStyle({ fillOpacity: 0.2 });
-  //   });
-  // });
-
+    })
+    .catch(error => {
+      console.error("Error occurred:", error);
+    });
 });
 </script>
 

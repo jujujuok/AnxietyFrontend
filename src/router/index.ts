@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 // import MapView from '@/views/MapView.vue'
 import MapView from '@/views/MapView.vue'
+import WorldView from '@/views/WorldView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 
@@ -22,7 +23,7 @@ const router = createRouter({
     {
       path: '/world',
       name: 'world',
-      component: MapView
+      component: WorldView
     },
     {
       path: '/dashboard',

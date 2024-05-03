@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup>
 
-defineProps<{
-  msg: string
-}>()
+let props = defineProps({
+  msg: String
+})
 
 </script>
 
