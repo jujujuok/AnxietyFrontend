@@ -3,7 +3,7 @@
         <v-list dense>
             <v-list-item title="Dashboard"></v-list-item>
             <v-divider></v-divider>
-            <RouterLink :to="{name: 'dashboard', params: {type: 'food-product-warnings'}}">
+            <RouterLink class="router-link" :to="{name: 'dashboard', params: {type: 'food-product-warnings'}}">
                 <v-list-item @click="drawer = false; router.push('/dashboard/food-product-warnings');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-food-apple</v-icon>
@@ -12,7 +12,7 @@
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink :to="{name: 'dashboard', params: {type: 'travel-warnings'}}">
+            <RouterLink class="router-link" :to="{name: 'dashboard', params: {type: 'travel-warnings'}}">
                 <v-list-item @click="drawer = false; router.push('/dashboard/travel-warnings');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-alert-circle</v-icon>
@@ -20,7 +20,7 @@
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink :to="{name: 'dashboard', params: {type: 'embassies'}}">
+            <RouterLink class="router-link" :to="{name: 'dashboard', params: {type: 'embassies'}}">
                 <v-list-item @click="drawer = false; router.push('/dashboard/embassies');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-briefcase-account</v-icon>
@@ -28,7 +28,7 @@
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink :to="{name: 'dashboard', params: {type: 'interpol'}}">
+            <RouterLink class="router-link" :to="{name: 'dashboard', params: {type: 'interpol'}}">
                 <v-list-item @click="drawer = false; router.push('/dashboard/interpol');">
                     <div class="topic-container">
                         <v-icon class="topic-content">mdi-account-search</v-icon>
@@ -51,7 +51,7 @@
 <style>
 
 .router-link {
-    color: var(--dark-mode-text);
+    color: var(--_primary-label-text-color);
 }
 
 .v-list-subheader__text {
