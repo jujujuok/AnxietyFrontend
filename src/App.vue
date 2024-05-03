@@ -8,9 +8,9 @@ import { VIcon } from 'vuetify/components'; // Import v-icon
   <v-app id="app-container">
     <footer>
       <nav>
-        <RouterLink class="router-button" to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
-        <RouterLink class="router-button" to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
-        <RouterLink class="router-button" to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
       </nav>
     </footer>
 
@@ -32,7 +32,6 @@ import { VIcon } from 'vuetify/components'; // Import v-icon
     text-decoration: none;
     background-color: var(--dark-mode-lighter-bg);
     color: var(--dark-mode-text);
-    border: none;
 }
 
 .router-button:hover {
