@@ -43,18 +43,22 @@
                         cols="12"
                 >
                     <v-card style="padding: 0 10px;" @click="openSideView(cardInfo)">
-                        <v-list style="display: flex; padding: 2vh; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-                            <div style="display: flex; align-items: center;">
-                                <v-icon style="margin-right: 1vh;">
-                                    {{ setIcon(cardInfo.type) }}
-                                </v-icon>
-                                <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ cardInfo.title }}</v-list-item-title>
-                            </div>
-                            <v-list-item-subtitle>{{
-                                formatPublishedDate(parseInt(cardInfo.publishedDate))
-                                }}
-                            </v-list-item-subtitle>
-                        </v-list>
+                        <table style="display: flex; padding: 2vh; align-items: center; justify-content: space-between;">
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <v-icon style="margin-right: 1vh;">
+                                        {{ setIcon(cardInfo.type) }}
+                                    </v-icon>
+                                    <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ cardInfo.title }}</v-list-item-title>
+                                </div>
+                            </td>
+                            <td>
+                                <v-list-item-subtitle class="time-text">{{
+                                        formatPublishedDate(parseInt(cardInfo.publishedDate))
+                                    }}
+                                </v-list-item-subtitle>
+                            </td>
+                        </table>
                     </v-card>
                 </v-col>
             </v-row>
@@ -253,6 +257,10 @@ watch(selectedArea, () => {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.time-text {
+    white-space: nowrap;
 }
 
 .v-list-subheader__text {
