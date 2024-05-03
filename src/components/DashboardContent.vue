@@ -20,13 +20,21 @@
                 <v-select
                         v-model="selectedArea"
                         :items="setSelectButtonContent(type)"
-                        label="Select"
+                        :label="selectLabel"
                         class="select-area"
+                ></v-select>
+                <v-select
+                        v-model="selectedOrder"
+                        label="Reihenfolge"
+                        :items="['Ascending', 'Descending']"
+                        class="select-area"
+                        @update:model-value="sortData"
                 ></v-select>
             </v-col>
         </v-row>
         <v-container fluid>
-            <v-row v-if="isLoading" class="loading-indicator-row">
+            <!--TODO checl why isSorting doesn't show a loading indicator-->
+            <v-row v-if="isLoading || isSorting" class="loading-indicator-row">
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </v-row>
             <v-row v-else>
@@ -36,11 +44,17 @@
                         cols="12"
                 >
                     <v-card style="padding: 0 10px;" @click="openSideView(cardInfo.id)">
-                        <v-list style="display: flex; padding: 2vh;">
-                            <v-icon style="margin-right: 1vh;">
-                                {{ setIcon(cardInfo.type) }}
-                            </v-icon>
-                            <v-list-item-title :title="cardInfo.title">{{ cardInfo.title }}</v-list-item-title>
+                        <v-list style="display: flex; padding: 2vh; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center;">
+                                <v-icon style="margin-right: 1vh;">
+                                    {{ setIcon(cardInfo.type) }}
+                                </v-icon>
+                                <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ cardInfo.title }}</v-list-item-title>
+                            </div>
+                            <v-list-item-subtitle>{{
+                                formatPublishedDate(parseInt(cardInfo.publishedDate))
+                                }}
+                            </v-list-item-subtitle>
                         </v-list>
                     </v-card>
                 </v-col>
@@ -51,25 +65,28 @@
 </template>
 
 <script setup>
-import {onBeforeMount, ref, watch} from 'vue';
+import {computed, onBeforeMount, ref, watch} from 'vue';
 import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
 import {onBeforeRouteUpdate} from "vue-router";
 import {getCountryDataList} from "countries-list";
+import {formatDistanceToNow} from "date-fns";
 
 const props = defineProps({
     type: String,
     required: Boolean
 });
 
-let selected = ref(getSelectedButtonValues()[0].value);
 const cardInfos = ref([]);
-let isLoading = ref(false);
 const selectedCard = ref({});
 const showDetails = ref(false);
 const selectedArea = ref(null);
+const selectedOrder = ref('Ascending');
+let selected = ref(getSelectedButtonValues()[0].value);
+let isLoading = ref(false);
 let unfilteredData = [];
+let isSorting = ref(false);
 
 async function updateSelected(newValue) {
     selected.value = newValue;
@@ -82,6 +99,14 @@ const APIType = {
     'embassies': 'country_representative',
     'interpol': 'interpol_red'
 };
+
+const selectLabel = computed(() => {
+    return props.type === 'food-product-warnings' ? 'Bundesländer' : 'Länder';
+});
+
+function formatPublishedDate(publishedDate) {
+    return formatDistanceToNow(new Date(publishedDate), {addSuffix: true});
+}
 
 function getSelectedButtonValues() {
     switch (props.type) {
@@ -97,6 +122,16 @@ function getSelectedButtonValues() {
                 {value: 'europe', label: 'Europa'}
             ];
     }
+}
+
+async function sortData() {
+    isSorting.value = true;
+    if (selectedOrder.value === 'Descending') {
+        cardInfos.value.sort((a, b) => parseInt(a.publishedDate) - parseInt(b.publishedDate));
+    } else {
+        cardInfos.value.sort((a, b) => parseInt(b.publishedDate) - parseInt(a.publishedDate));
+    }
+    isSorting.value = false;
 }
 
 function setSelectButtonContent(dashboardType) {
@@ -149,7 +184,7 @@ function openSideView(id) {
     }
 }
 
-function filterData(){
+function filterData() {
     const filters = APIType[props.type];
     console.log(`Type: ${props.type}`);
 
@@ -182,6 +217,7 @@ async function loadData() {
         unfilteredData = await DashboardInfoService.getDashboardInfos();
 
         filterData();
+        sortData();
 
     } catch (error) {
         console.error('Error fetching dashboard infos:', error);
@@ -197,13 +233,12 @@ onBeforeRouteUpdate(async () => {
 
 onBeforeMount(async () => {
     selected.value = getSelectedButtonValues()[0].value;
-    console.log(isLoading);
     loadData();
-    console.log(isLoading);
 });
 
 watch(selectedArea, () => {
     filterData();
+    sortData();
 });
 </script>
 
