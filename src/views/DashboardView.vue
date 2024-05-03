@@ -42,7 +42,6 @@
     <v-app-bar style="display: flex; justify-content: start;">
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-app-bar-title>Dashboard</v-app-bar-title>
-        <SearchBar/>
     </v-app-bar>
 
     <DashboardContent :type="type"/>

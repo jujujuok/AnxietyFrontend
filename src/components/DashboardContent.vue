@@ -6,7 +6,6 @@
                     class="d-flex justify-space-between"
             >
                 <div class="button-container">
-                    <!-- Dynamically render buttons based on the type -->
                     <SelectedButton
                             v-for="btn in getSelectedButtonValues()"
                             :key="btn.value"
@@ -26,14 +25,14 @@
                 <v-select
                         v-model="selectedOrder"
                         label="Reihenfolge"
-                        :items="['Ascending', 'Descending']"
+                        :items="['Aufsteigend', 'Absteigend']"
                         class="select-area"
                         @update:model-value="sortData"
                 ></v-select>
             </v-col>
         </v-row>
         <v-container fluid>
-            <!--TODO checl why isSorting doesn't show a loading indicator-->
+            <!--TODO check why isSorting doesn't show a loading indicator-->
             <v-row v-if="isLoading || isSorting" class="loading-indicator-row">
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </v-row>
@@ -43,7 +42,7 @@
                         :key="cardInfo.id"
                         cols="12"
                 >
-                    <v-card style="padding: 0 10px;" @click="openSideView(cardInfo.id)">
+                    <v-card style="padding: 0 10px;" @click="openSideView(cardInfo)">
                         <v-list style="display: flex; padding: 2vh; flex-wrap: wrap; align-items: center; justify-content: space-between;">
                             <div style="display: flex; align-items: center;">
                                 <v-icon style="margin-right: 1vh;">
@@ -65,13 +64,16 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, ref, watch} from 'vue';
 import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
+import translate from "translate";
+import {computed, onBeforeMount, ref, watch} from 'vue';
 import {onBeforeRouteUpdate} from "vue-router";
 import {getCountryDataList} from "countries-list";
 import {formatDistanceToNow} from "date-fns";
+import {de} from "date-fns/locale";
+import {format} from "date-fns/format";
 
 const props = defineProps({
     type: String,
@@ -82,11 +84,12 @@ const cardInfos = ref([]);
 const selectedCard = ref({});
 const showDetails = ref(false);
 const selectedArea = ref(null);
-const selectedOrder = ref('Ascending');
+const selectedOrder = ref('Aufsteigend');
 let selected = ref(getSelectedButtonValues()[0].value);
 let isLoading = ref(false);
 let unfilteredData = [];
 let isSorting = ref(false);
+translate.engine = 'deepl';
 
 async function updateSelected(newValue) {
     selected.value = newValue;
@@ -105,7 +108,7 @@ const selectLabel = computed(() => {
 });
 
 function formatPublishedDate(publishedDate) {
-    return formatDistanceToNow(new Date(publishedDate), {addSuffix: true});
+    return formatDistanceToNow(new Date(publishedDate), {addSuffix: true, locale: de});
 }
 
 function getSelectedButtonValues() {
@@ -126,7 +129,7 @@ function getSelectedButtonValues() {
 
 async function sortData() {
     isSorting.value = true;
-    if (selectedOrder.value === 'Descending') {
+    if (selectedOrder.value === 'Absteigend') {
         cardInfos.value.sort((a, b) => parseInt(a.publishedDate) - parseInt(b.publishedDate));
     } else {
         cardInfos.value.sort((a, b) => parseInt(b.publishedDate) - parseInt(a.publishedDate));
@@ -168,13 +171,16 @@ function setIcon(cardType) {
     }
 }
 
-function openSideView(id) {
+function openSideView(cardInfo) {
     try {
-        if (id != null && id > 0) {
-            DashboardInfoService.fetchCardDetailsById(id).then(
+        if (cardInfo.id != null && cardInfo.id > 0) {
+            DashboardInfoService.fetchCardDetailsById(cardInfo.id).then(
                 (response) => {
                     console.log(response);
                     selectedCard.value = response;
+                    if(cardInfo.hasOwnProperty('area')){
+                        selectedCard.value.area = cardInfo.area;
+                    }
                     showDetails.value = true;
                 }
             );

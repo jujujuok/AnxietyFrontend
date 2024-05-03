@@ -18,8 +18,8 @@
                     </template>
                     <v-list-item>
                         <v-list-item-action>
-                            <v-btn v-if="cardInfoDetails.hasOwnProperty('link')" :href="cardInfoDetails.link" text color="primary" style="width: 100%;">
-                                More Info
+                            <v-btn v-if="cardInfoDetails.hasOwnProperty('link')" :href="cardInfoDetails.link" text color="primary" style="width: 100%; font-size: 10px;">
+                                Weitere Informationen
                             </v-btn>
                         </v-list-item-action>
                     </v-list-item>
@@ -47,7 +47,8 @@ const iconMapping = {
     hazard: 'mdi-alert-circle',
     injury: 'mdi-hospital',
     link: 'mdi-link',
-    category: 'mdi-tag'
+    category: 'mdi-tag',
+    affectedProducts: 'mdi-package-variant-closed',
 };
 
 const formatValue = (key, value) => {
