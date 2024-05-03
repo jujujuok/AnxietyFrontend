@@ -8,7 +8,8 @@ let props = defineProps({
   start_lon: Number,
   start_lat: Number,
   zoom_start: Number,
-  url: String
+  url: String,
+  filter: ref,
 })
 
 async function callApi(url) {
@@ -34,12 +35,12 @@ onMounted(async () => {
 
   callApi(props.url)
     .then(data => {
-      console.log("API DATA", data);
 
       data.forEach(item => {
         let item_color = 'red';
         let pop = item.title;
         let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
+        console.log("filter: ", props.filter, "item type: ", item.type)
 
         switch (item.type) {
           case "nina":

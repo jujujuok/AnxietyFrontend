@@ -1,12 +1,18 @@
 <script setup>
+import { ref } from 'vue';
 
+const selectedFilters = ref([]);
+
+function getSelection() {
+  return selectedFilters.value;
+}
 </script>
 
 <template>
   <div class="dashboard">
     <h1 class="green">Dashboard</h1>
 
-    <v-btn-toggle stacked background-color="primary" dark multiple>
+    <v-btn-toggle v-model="selectedFilters" stacked background-color="primary" dark multiple>
       <v-btn value="radioactive" icon="mdi-radioactive"></v-btn>
       <v-btn value="air" icon="mdi-weather-windy"></v-btn>
       <v-btn value="interpol" icon="mdi-police-badge"></v-btn>
@@ -16,6 +22,3 @@
     </v-btn-toggle>
   </div>
 </template>
-
-<style scoped>
-</style>
