@@ -15,6 +15,7 @@
         "prod": "npm run-script build && serve build"
     },
     "dependencies": {
+        "world-geojson": "^3.0",
         "@material/web": "^1.0.0",
         "axios": "^1.6.8",
         "npm": "^10.5.0",

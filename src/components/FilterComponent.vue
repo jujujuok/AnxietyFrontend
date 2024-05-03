@@ -1,18 +1,17 @@
-<script setup lang="ts">
+<script setup>
 
 import { onMounted, ref } from 'vue';
 import { VBtn, VBtnToggle } from 'vuetify/components';
 
-let props = defineProps<{
-    names?: Array<String>
-    icons?: []
-}>();
+
+
+let props = defineProps({
+  names: [],
+//   icons: []
+})
 
 let displaySelection = ref(true);
 
-onMounted(() => {
-
-});
 </script>
 
 
