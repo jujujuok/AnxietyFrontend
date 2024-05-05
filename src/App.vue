@@ -1,22 +1,36 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
-import { VIcon } from 'vuetify/components'; // Import v-icon
+<script setup>
+import {RouterLink, RouterView} from 'vue-router';
+import {VIcon} from 'vuetify/components';
+import DataManager from "@/services/data-manager.js";
 
+const dataManager = new DataManager();
+
+//Look for updates every 5 minutes
+setInterval(() => {
+    dataManager.synchronizeDashboardData();
+    console.log("Synchronized dashboard data.")
+}, 300000);
 </script>
 
 <template>
-  <v-app id="app-container">
-    <footer>
-      <nav>
-        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
-        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
-        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
-      </nav>
-    </footer>
+    <v-app id="app-container">
+        <footer>
+            <nav>
+                <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/">
+                    <v-icon icon="mdi-home-variant"></v-icon>
+                </RouterLink>
+                <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/map">
+                    <v-icon icon="mdi-map"></v-icon>
+                </RouterLink>
+                <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/dashboard">
+                    <v-icon icon="mdi-chart-box"></v-icon>
+                </RouterLink>
+            </nav>
+        </footer>
 
 
-  <RouterView style="margin-bottom: calc(60px + 1rem);" />
-  </v-app>
+        <RouterView style="margin-bottom: calc(60px + 1rem);"/>
+    </v-app>
 </template>
 
 <style scoped>
@@ -44,37 +58,37 @@ import { VIcon } from 'vuetify/components'; // Import v-icon
 }
 
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-  background-color: #00000000;
-  align-items: center;
-  padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: #00000000;
+    align-items: center;
+    padding: 1rem;
 }
 
 nav {
-  width: 100%;
-  font-size: 18px;
-  text-align: center;
+    width: 100%;
+    font-size: 18px;
+    text-align: center;
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+    color: var(--color-text);
 }
 
 nav a.router-link-exact-active:hover {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+    display: inline-block;
+    padding: 0 1rem;
+    border-left: 1px solid var(--color-border);
 }
 
 nav a:first-of-type {
-  border: 0;
+    border: 0;
 }
 </style>

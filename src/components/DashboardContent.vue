@@ -71,19 +71,19 @@
 import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
-import translate from "translate";
 import {computed, onBeforeMount, ref, watch} from 'vue';
 import {onBeforeRouteUpdate} from "vue-router";
 import {getCountryDataList} from "countries-list";
 import {formatDistanceToNow} from "date-fns";
 import {de} from "date-fns/locale";
-import {format} from "date-fns/format";
+import DataManager from "@/services/data-manager.js";
 
 const props = defineProps({
     type: String,
     required: Boolean
 });
 
+const dataManager = new DataManager();
 const cardInfos = ref([]);
 const selectedCard = ref({});
 const showDetails = ref(false);
@@ -91,9 +91,7 @@ const selectedArea = ref(null);
 const selectedOrder = ref('Aufsteigend');
 let selected = ref(getSelectedButtonValues()[0].value);
 let isLoading = ref(false);
-let unfilteredData = [];
 let isSorting = ref(false);
-translate.engine = 'deepl';
 
 async function updateSelected(newValue) {
     selected.value = newValue;
@@ -177,7 +175,7 @@ function setIcon(cardType) {
 
 function openSideView(cardInfo) {
     try {
-        if (cardInfo.id != null && cardInfo.id > 0) {
+        if (cardInfo.id != null && cardInfo.id > 0 && !dataManager.doDetailsExist(cardInfo.id)) {
             DashboardInfoService.fetchCardDetailsById(cardInfo.id).then(
                 (response) => {
                     console.log(response);
@@ -186,8 +184,12 @@ function openSideView(cardInfo) {
                         selectedCard.value.area = cardInfo.area;
                     }
                     showDetails.value = true;
+                    dataManager.appendDetails(cardInfo.id, response);
                 }
             );
+        }else {
+            selectedCard.value = dataManager.getDetails(cardInfo.id);
+            showDetails.value = true;
         }
     } catch (error) {
         console.error('Error fetching card details:', error);
@@ -196,6 +198,7 @@ function openSideView(cardInfo) {
 
 function filterData() {
     const filters = APIType[props.type];
+    const unfilteredData = dataManager.getDashboardData()
     console.log(`Type: ${props.type}`);
 
     //if the dashboard is for food and product warnings
@@ -220,11 +223,30 @@ function filterData() {
 }
 
 async function loadData() {
-    console.log(props.type)
+    const toBeUpdated = {
+        "add": [
+            {
+                "id": 60000,
+                "type": "product_warning",
+                "title": "Kaffeethermoskanne",
+                "publishedDate": "1713304800000",
+                "severity": "information"
+            },
+            {
+                "id": 60001,
+                "type": "product_warning",
+                "title": "Betonschraube/concrete screw ETA-17/0783, R-LX-05",
+                "publishedDate": "1713477600000",
+                "severity": "information"
+            }],
+        "delete": [
+            50630
+        ]
+    }
 
     try {
         isLoading.value = true;
-        unfilteredData = await DashboardInfoService.getDashboardInfos();
+        dataManager.saveDashboardData(await DashboardInfoService.getDashboardInfos());
 
         filterData();
         sortData();
