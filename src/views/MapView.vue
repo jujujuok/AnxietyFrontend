@@ -8,16 +8,16 @@ import { ref } from 'vue';
 
 const url = "http://api.risiko-radar.info/map";
 
-const filter = ref(null);
+const filter = ref([]);
 
 </script>
 
 
 <template>
-  <FilterComponent :names="filter_names" :icons="filter_icons" v-model:filter="filter" />
+  <FilterComponent :names="filter_names" :icons="filter_icons" v-model="filter" />
 
   <div id="container">
-    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :url="url" :filter="filter"/>
+    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :url="url" :filter="filter" />
   </div>
 </template>
 

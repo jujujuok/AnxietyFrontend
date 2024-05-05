@@ -1,18 +1,13 @@
 <script setup>
 
-import { ref } from 'vue';
 import { VBtn, VBtnToggle } from 'vuetify/components';
 
-
-
-let props = defineProps({
-  names: [],
-  icons: [],
+const props = defineProps({
+    names: [],
+    icons: [],
 })
 
-
-const filter = defineModel({default: null});
-
+const filter = defineModel({ default: [] });
 </script>
 
 
@@ -30,8 +25,7 @@ const filter = defineModel({default: null});
 </template>
 
 <style>
-
-.filter{
+.filter {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

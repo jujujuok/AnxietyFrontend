@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 
@@ -9,7 +9,7 @@ let props = defineProps({
   start_lat: Number,
   zoom_start: Number,
   url: String,
-  filter: ref,
+  filter: [],
 })
 
 async function callApi(url) {
@@ -24,7 +24,7 @@ async function callApi(url) {
   }
 }
 
-const map = L.Map;
+const map = ref(L.Map);
 
 onMounted(async () => {
   map.value = L.map('map').setView([props.start_lon, props.start_lat], props.zoom_start);
@@ -32,6 +32,12 @@ onMounted(async () => {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map.value);
+
+  updateMap()
+});
+
+function updateMap() {
+  if (!props.filter) return;
 
   callApi(props.url)
     .then(data => {
@@ -71,7 +77,13 @@ onMounted(async () => {
     .catch(error => {
       console.error("Error occurred:", error);
     });
+}
+
+watch(props, async () => {
+  console.log("watcher");
+  updateMap();
 });
+
 </script>
 
 

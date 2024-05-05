@@ -9,8 +9,8 @@ import Home from '@/components/Home.vue'
 
   <div class="text home">
     <h1 class="text-highlight">Home</h1>
-    <p>This is a project from some students from the 
-      <a href="https://www.getdigital.de/web/img/products/1100x1100/Aufkleber_Trollface.220426.webp">dhbw-stuttgart</a> 
+    <p>This is a project from some students from the
+      <a href="https://www.getdigital.de/web/img/products/1100x1100/Aufkleber_Trollface.220426.webp">dhbw-stuttgart</a>
       university.
     </p>
 
@@ -18,11 +18,12 @@ import Home from '@/components/Home.vue'
 
     <h2 class="text-highlight">Disclaimer</h2>
     <p>
-     The author assumes no liability for the topicality, correctness, completeness or quality of the information provided.
+      The author assumes no liability for the topicality, correctness, completeness or quality of the information
+      provided.
     </p>
 
     <br>
-    
+
     <h2 class="text-highlight">Some of the APIs used include:</h2>
     <ul>
       <li>Autobahn API</li>
