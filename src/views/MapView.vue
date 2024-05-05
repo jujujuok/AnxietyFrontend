@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { ref } from 'vue';
 
 
-const url = "http://api.risiko-radar.info/map";
+const url = "http://212.132.100.147:8000/map";
 
 const filter = ref(null);
 
@@ -16,19 +16,9 @@ const filter = ref(null);
 <template>
   <FilterComponent :names="filter_names" :icons="filter_icons" v-model:filter="filter" />
 
-  <div id="container">
-    <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :url="url" :filter="filter"/>
-  </div>
+  <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :url="url" :filter="filter"/>
 </template>
 
 <!-- todo dynamic filter
 const filter_names = ["radioactive", "air", "interpol", "autobahn", "weather_warnings"];
 const filter_icons = ["mdi-radioactive", "mdi-weather-windy", "mdi-police-badge", "mdi-car", "mdi-weather-lightning-rainy"]; -->
-
-
-<style>
-#container {
-  height: 100%;
-  width: 100%;
-}
-</style>
