@@ -13,24 +13,18 @@ setInterval(() => {
 </script>
 
 <template>
-    <v-app id="app-container">
-        <footer>
-            <nav>
-                <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/">
-                    <v-icon icon="mdi-home-variant"></v-icon>
-                </RouterLink>
-                <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/map">
-                    <v-icon icon="mdi-map"></v-icon>
-                </RouterLink>
-                <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/dashboard">
-                    <v-icon icon="mdi-chart-box"></v-icon>
-                </RouterLink>
-            </nav>
-        </footer>
+  <v-app id="app-container">
+    <footer>
+      <nav>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/world"><v-icon icon="mdi-earth"></v-icon></RouterLink>
+        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
+      </nav>
+    </footer>
 
-
-        <RouterView style="margin-bottom: calc(60px + 1rem);"/>
-    </v-app>
+  <RouterView style="margin-bottom: calc(60px + 1rem);" />
+  </v-app>
 </template>
 
 <style scoped>
@@ -58,14 +52,14 @@ setInterval(() => {
 }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1;
-    background-color: #00000000;
-    align-items: center;
-    padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #00000000;
+  align-items: center;
+  padding: 1rem;
 }
 
 nav {

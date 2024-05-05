@@ -76,12 +76,12 @@ onMounted(async () => {
 
 
 <template>
-  <div id="map" style="height:80vh;"></div>
+  <div id="map"></div>
 </template>
 
 <style>
 #map {
-  height: calc(100vh - 10%);
+  height: 100%;
 }
 
 @media (min-width: 1024px) {
