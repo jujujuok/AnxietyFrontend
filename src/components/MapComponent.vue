@@ -3,6 +3,7 @@
 import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
+import DataManager from "@/services/data-manager.js";
 
 let props = defineProps({
   start_lon: Number,
@@ -11,16 +12,21 @@ let props = defineProps({
   url: String,
   filter: ref,
 })
+const dataManager = new DataManager();
 
 async function callApi(url) {
-  const headers = {
-    'accept': 'application/json'
-  };
+  try {
+      const headers = {
+          'accept': 'application/json'
+      };
 
-  const response = await fetch(url, { headers });
+      const response = await fetch(url, { headers });
 
-  if (response.ok) {
-    return await response.json();
+      if (response.ok) {
+          return await response.json();
+      }
+  } catch(e){
+      console.error('Error while fetching map data: ', e);
   }
 }
 
@@ -33,44 +39,39 @@ onMounted(async () => {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map.value);
 
-  callApi(props.url)
-    .then(data => {
+  callApi(props.url).then(data => dataManager.saveMapData(data));
+  const data = dataManager.getMapData();
 
-      data.forEach(item => {
-        let item_color = 'red';
-        let pop = item.title;
-        let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
-        console.log("filter: ", props.filter, "item type: ", item.type)
+  data.forEach(item => {
+    let item_color = 'red';
+    let pop = item.title;
+    let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
+    console.log("filter: ", props.filter, "item type: ", item.type)
 
-        switch (item.type) {
-          case "nina":
-            item_color = 'blue';
-            break;
-          case "weather":
-            item_color = 'green';
-            break;
-          case "street_report":
-            item_color = 'purple';
-            break;
-          default:
-            item_color = 'red';
-            break;
-        }
+    switch (item.type) {
+      case "nina":
+        item_color = 'blue';
+        break;
+      case "weather":
+        item_color = 'green';
+        break;
+      case "street_report":
+        item_color = 'purple';
+        break;
+      default:
+        item_color = 'red';
+        break;
+    }
 
-        const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
-        polygon.bindPopup(pop);
-        polygon.on('mouseover', function (e) {
-          polygon.setStyle({ fillOpacity: 0.7 });
-        });
-        polygon.on('mouseout', function (e) {
-          polygon.setStyle({ fillOpacity: 0.2 });
-        });
-      });
-
-    })
-    .catch(error => {
-      console.error("Error occurred:", error);
+    const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
+    polygon.bindPopup(pop);
+    polygon.on('mouseover', function (e) {
+      polygon.setStyle({ fillOpacity: 0.7 });
     });
+    polygon.on('mouseout', function (e) {
+      polygon.setStyle({ fillOpacity: 0.2 });
+    });
+  });
 });
 </script>
 

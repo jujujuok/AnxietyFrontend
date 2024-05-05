@@ -30,6 +30,35 @@ class DataManager {
         }
     }
 
+    saveMapData(data) {
+        try {
+            const jsonData = JSON.stringify(data);
+            if(!localStorage.hasOwnProperty('mapData')) {
+                localStorage.setItem('mapData', jsonData);
+                console.log('Map data saved successfully.');
+            } else {
+                console.log('Map data already exists in localStorage.');
+            }
+        } catch (error) {
+            console.error('Failed to save map data to localStorage:', error);
+        }
+    }
+
+    getMapData() {
+        try {
+            const jsonData = localStorage.getItem('mapData');
+            if (jsonData) {
+                return JSON.parse(jsonData);
+            } else {
+                console.log('No map data found in localStorage.');
+                return null;
+            }
+        } catch (error) {
+            console.error('Failed to retrieve map data from localStorage:', error);
+            return null;
+        }
+    }
+
     appendDetails(cardId, details) {
         let dashboardData = this.getDashboardData();
         const index = dashboardData.findIndex(item => item.id === cardId);

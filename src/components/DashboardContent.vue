@@ -223,27 +223,6 @@ function filterData() {
 }
 
 async function loadData() {
-    const toBeUpdated = {
-        "add": [
-            {
-                "id": 60000,
-                "type": "product_warning",
-                "title": "Kaffeethermoskanne",
-                "publishedDate": "1713304800000",
-                "severity": "information"
-            },
-            {
-                "id": 60001,
-                "type": "product_warning",
-                "title": "Betonschraube/concrete screw ETA-17/0783, R-LX-05",
-                "publishedDate": "1713477600000",
-                "severity": "information"
-            }],
-        "delete": [
-            50630
-        ]
-    }
-
     try {
         isLoading.value = true;
         dataManager.saveDashboardData(await DashboardInfoService.getDashboardInfos());
