@@ -1,19 +1,23 @@
 :root {
-  --dark-mode-bg: rgb(26, 83, 92);
-  --dark-mode-text: rgb(247,255,247);
+  --dark-mode-lighter-bg: rgb(247,255,247);
+  --dark-mode-bg: rgb(240,244,240);
+  --dark-mode-text: rgb(26, 83, 92);
   --dark-mode-red: rgb(255,107,107);
   --dark-mode-yellow: rgb(255,230,109);
   --dark-mode-green: rgb(133,153,0);
     
   --dark-mode-text-highlight: rgb(0, 137, 66);
   --dark-mode-orange: rgb(203,75,22);
-
   --dark-mode-blue: rgb(38,139,210);
   --dark-mode-purple: rgb(133, 0, 64);
   --dark-mode-cyan: rgb(42,161,152);
   --dashboard-entry-color: rgb(0, 101, 123);
-}
+  --md-sys-color-primary: rgb(26, 83, 92);
 
+  --md-sys-typescale-body-large-font: Roboto, sans-serif;
+  --md-sys-typescale-label-large-font: Roboto, sans-serif;
+  --md-sys-typescale-body-medium-font: Roboto, sans-serif;
+}
 
 body {
   min-height: 100vh;

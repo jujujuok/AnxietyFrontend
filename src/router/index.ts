@@ -1,11 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-// import MapView from '@/views/MapView.vue'
-import MapView from '@/views/MapView.vue'
-import WorldView from '@/views/WorldView.vue'
-import DashboardView from '@/views/DashboardView.vue'
-import ErrorView from '@/views/ErrorView.vue'
-
+import HomeView from '../views/HomeView.vue'
+import MapView from '../views/MapView.vue'
+import WorldView from '../views/WorldView.vue'
+import ErrorView from '../views/ErrorView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,9 +23,15 @@ const router = createRouter({
       component: WorldView
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/',
+      name: 'dashboard_default',
+      redirect: '/dashboard/food-product-warnings'
+    },
+    {
+      path: '/dashboard/:type',
       name: 'dashboard',
-      component: DashboardView
+      component: () => import('../views/DashboardView.vue'),
+      props: route => ({ type: route.params.type })
     },
     {
       path: '/:catchAll(.*)',
