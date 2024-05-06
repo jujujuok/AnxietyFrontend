@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 import DataManager from "@/services/data-manager.js";
 import SideView from "@/components/SideView.vue";
 import dashboardInfoService from "@/services/dashboard-info-service.js";
+import WarningsList from "@/components/WarningsList.vue";
 
 let props = defineProps({
     start_lon: Number,
@@ -16,7 +17,10 @@ let props = defineProps({
 })
 const dataManager = new DataManager();
 const showDetails = ref(false);
+const showWarningsList = ref(true);
 const selectedWarning = ref({});
+const data = ref([]);
+const visibleInfos = ref([]);
 
 async function callApi(url) {
     try {
@@ -45,16 +49,21 @@ onMounted(async () => {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map.value);
 
-    updateMap()
+    map.value.on("moveend", function (e){
+        checkVisiblePolygons();
+    });
+
+    updateMap();
+    checkVisiblePolygons();
 });
 
 function updateMap() {
     if (!props.filter) return;
 
     callApi(props.url).then(data => dataManager.saveMapData(data));
-    const data = dataManager.getMapData();
+    data.value = dataManager.getMapData();
 
-    data.forEach(item => {
+    data.value.forEach(item => {
         let item_color = 'red';
         let pop = item.title;
         let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
@@ -94,6 +103,16 @@ function updateMap() {
     });
 }
 
+function checkVisiblePolygons() {
+    const mapBounds = map.value.getBounds();
+    visibleInfos.value = data.value.filter(warning => {
+        const polygon = L.polygon(warning.area);
+        return mapBounds.intersects(polygon.getBounds());
+    });
+
+    console.log("Visible Warnings:", visibleInfos.value);
+}
+
 watch(props, async () => {
     console.log("watcher");
     updateMap();
@@ -102,8 +121,12 @@ watch(props, async () => {
 
 
 <template>
+    <v-btn style="box-shadow: none; margin-right: 1vh; position: absolute; top: 15vh; background-color: transparent; z-index: 1000;" icon @click="showWarningsList = true;">
+        <v-icon>mdi-chevron-left</v-icon>
+    </v-btn>
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
+    <WarningsList v-model="showWarningsList" :warning-cards="visibleInfos" @go-back="showWarningsList = false;"></WarningsList>
 </template>
 
 <style>
