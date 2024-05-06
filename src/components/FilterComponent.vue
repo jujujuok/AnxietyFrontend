@@ -36,6 +36,6 @@ const filter = defineModel({ default: [] });
     margin: 2vh 2vh;
     height: auto !important;
 
-    z-index: 10000;
+    z-index: 1000;
 }
 </style>

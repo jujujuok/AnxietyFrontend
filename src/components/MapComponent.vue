@@ -4,6 +4,8 @@ import {ref, onMounted, watch} from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 import DataManager from "@/services/data-manager.js";
+import SideView from "@/components/SideView.vue";
+import dashboardInfoService from "@/services/dashboard-info-service.js";
 
 let props = defineProps({
     start_lon: Number,
@@ -13,6 +15,8 @@ let props = defineProps({
     filter: [],
 })
 const dataManager = new DataManager();
+const showDetails = ref(false);
+const selectedWarning = ref({});
 
 async function callApi(url) {
     try {
@@ -79,6 +83,14 @@ function updateMap() {
         polygon.on('mouseout', function (e) {
             polygon.setStyle({fillOpacity: 0.2});
         });
+        polygon.on('click', function (e) {
+            dashboardInfoService.fetchMapDetailsById(item.id).then(
+                (response) => {
+                    console.log(response);
+                    selectedWarning.value = response;
+                    showDetails.value = !showDetails.value;
+                });
+        });
     });
 }
 
@@ -91,6 +103,7 @@ watch(props, async () => {
 
 <template>
     <div id="map"></div>
+    <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
 </template>
 
 <style>

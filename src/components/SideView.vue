@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer style="width: 50vh;" v-model="showDetails" location="right">
+    <v-navigation-drawer style="width: 60vh;" v-model="showDetails" location="right">
         <v-card class="ma-5 pa-4" outlined>
             <v-img
                 :src="cardInfoDetails.image"
@@ -13,7 +13,8 @@
                     <template v-for="(value, key) in cardInfoDetails">
                         <v-list-item v-if="value && key !== 'image' && key !== 'link' && key !== 'type'">
                             <v-icon :icon="iconMapping[key]"></v-icon>
-                            {{formatValue(key, value) }}
+                            <span class="topic-title">{{ germanTranslations[key] }}:</span>
+                            {{ formatValue(key, value) }}
                         </v-list-item>
                     </template>
                     <v-list-item>
@@ -49,6 +50,22 @@ const iconMapping = {
     link: 'mdi-link',
     category: 'mdi-tag',
     affectedProducts: 'mdi-package-variant-closed',
+    instruction: 'mdi-alert',
+};
+
+const germanTranslations = {
+    description: 'Beschreibung',
+    area: 'Gebiet',
+    country: 'Land',
+    manufacturer: 'Hersteller',
+    first_name: 'Vorname',
+    last_name: 'Nachname',
+    hazard: 'Gefahr',
+    injury: 'Verletzung',
+    link: 'Link',
+    category: 'Kategorie',
+    affectedProducts: 'Betroffene Produkte',
+    instruction: 'Anweisung'
 };
 
 const formatValue = (key, value) => {
@@ -62,6 +79,10 @@ const showDetails = ref(false);
 </script>
 
 <style scoped>
+.topic-title {
+    font-weight: bold;
+}
+
 .topic-container {
     display: flex;
     align-items: center;
@@ -70,10 +91,6 @@ const showDetails = ref(false);
 .topic-content {
     display: flex;
     align-items: center;
-}
-
-.topic-title {
-    margin-left: 10px;
 }
 
 .v-list-item {

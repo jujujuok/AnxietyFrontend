@@ -7,7 +7,6 @@ import { ref } from 'vue';
 
 
 const url = "http://api.risiko-radar.info/map";
-
 const filter = ref([]);
 
 </script>

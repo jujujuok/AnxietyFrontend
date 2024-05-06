@@ -1,8 +1,11 @@
 import axios from 'axios';
 
 class DashboardInfoService {
+    constructor() {
+        this.baseUrl = 'http://api.risiko-radar.info';
+    }
     async getDashboardInfos() {
-        return axios.get('http://212.132.100.147:8000/dashboard')
+        return axios.get(`${this.baseUrl}/dashboard`)
             .then(response => {
                 console.log(response);
                 return response.data;
@@ -15,7 +18,17 @@ class DashboardInfoService {
 
     async fetchCardDetailsById(id) {
         try {
-            const response = await axios.get(`http://212.132.100.147:8000/dashboard/${id}`);
+            const response = await axios.get(`${this.baseUrl}/dashboard/${id}`);
+            console.log(`Card details for id ${id}:`, response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch card details:', error);
+        }
+    };
+
+    async fetchMapDetailsById(id) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/map/${id}`);
             console.log(`Card details for id ${id}:`, response.data);
             return response.data;
         } catch (error) {
@@ -24,7 +37,7 @@ class DashboardInfoService {
     };
 
     async getDashboardUpdates() {
-        const endpoint = 'http://212.132.100.147:8000/dashboard/update';
+        const endpoint = `${this.baseUrl}/dashboard/update`;
         const timestamp = 1714915348;
 
         try {
@@ -42,7 +55,7 @@ class DashboardInfoService {
     }
 
     async getMapUpdates() {
-        const endpoint = 'http://212.132.100.147:8000/map/update';
+        const endpoint = `${this.baseUrl}/map/update`;
         const timestamp = 1714915348;
 
         try {
