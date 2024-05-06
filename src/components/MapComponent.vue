@@ -32,6 +32,7 @@ async function callApi(url) {
 
 const map = L.Map;
 
+
 onMounted(async () => {
   map.value = L.map('map').setView([props.start_lon, props.start_lat], props.zoom_start);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

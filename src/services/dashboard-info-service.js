@@ -23,8 +23,26 @@ class DashboardInfoService {
         }
     };
 
-    async getUpdates() {
+    async getDashboardUpdates() {
         const endpoint = 'http://212.132.100.147:8000/dashboard/update';
+        const timestamp = 1714915348;
+
+        try {
+            const response = await axios.get(endpoint, {
+                params: {
+                    'timestamp': timestamp
+                }
+            });
+
+            console.log('Success:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating dashboard timestamp:', error);
+        }
+    }
+
+    async getMapUpdates() {
+        const endpoint = 'http://212.132.100.147:8000/map/update';
         const timestamp = 1714915348;
 
         try {

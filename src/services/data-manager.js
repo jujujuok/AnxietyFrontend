@@ -96,7 +96,7 @@ class DataManager {
     }
 
     async synchronizeDashboardData() {
-        const updateData = await dashboardInfoService.getUpdates();
+        const updateData = await dashboardInfoService.getDashboardUpdates();
         let dashboardData = this.getDashboardData();
 
         //Add new data
@@ -114,6 +114,30 @@ class DataManager {
         localStorage.setItem('dashboardData', JSON.stringify(dashboardData));
 
         console.log('Dashboard data synchronized successfully.');
+    }
+
+    async synchronizeMapData() {
+        try {
+            const updateData = await dashboardInfoService.getMapUpdates();
+
+            let mapData = this.getMapData();
+
+            updateData.add.forEach(newItem => {
+                if (!mapData.some(item => item.id === newItem.id)) {
+                    mapData.push(newItem);
+                }
+            });
+
+            updateData.delete.forEach(deleteId => {
+                mapData = mapData.filter(item => item.id !== deleteId);
+            });
+
+            localStorage.setItem('mapData', JSON.stringify(mapData));
+
+            console.log('Map data synchronized successfully.');
+        } catch (error) {
+            console.error('Failed to synchronize map data:', error);
+        }
     }
 }
 

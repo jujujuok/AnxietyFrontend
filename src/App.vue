@@ -8,6 +8,7 @@ const dataManager = new DataManager();
 //Look for updates every 5 minutes
 setInterval(() => {
     dataManager.synchronizeDashboardData();
+    dataManager.synchronizeMapData();
     console.log("Synchronized dashboard data.")
 }, 300000);
 </script>
