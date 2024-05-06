@@ -17,8 +17,9 @@ class DataManager {
 
     getDashboardData() {
         try {
-            const jsonData = localStorage.getItem('dashboardData');
-            if (jsonData) {
+            let jsonData = [];
+            if (localStorage.hasOwnProperty('dashboardData')){
+                jsonData = localStorage.getItem('dashboardData')
                 return JSON.parse(jsonData);
             } else {
                 console.log('No dashboard data found in localStorage.');
@@ -46,8 +47,10 @@ class DataManager {
 
     getMapData() {
         try {
-            const jsonData = localStorage.getItem('mapData');
-            if (jsonData) {
+            let jsonData = [];
+            console.log(localStorage.hasOwnProperty('mapData'));
+            if(localStorage.hasOwnProperty('mapData')){
+                jsonData = localStorage.getItem('mapData');
                 return JSON.parse(jsonData);
             } else {
                 console.log('No map data found in localStorage.');
