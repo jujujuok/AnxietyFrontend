@@ -247,6 +247,16 @@ onBeforeMount(async () => {
     loadData();
 });
 
+//Look for updates every 5 minutes
+setInterval(() => {
+    dataManager.synchronizeDashboardData();
+    cardInfos.value = dataManager.getDashboardData();
+    filterData();
+    sortData();
+
+    console.log("Synchronized dashboard data.")
+}, 300000);
+
 watch(selectedArea, () => {
     filterData();
     sortData();

@@ -1,16 +1,6 @@
 <script setup>
 import {RouterLink, RouterView} from 'vue-router';
 import {VIcon} from 'vuetify/components';
-import DataManager from "@/services/data-manager.js";
-
-const dataManager = new DataManager();
-
-//Look for updates every 5 minutes
-setInterval(() => {
-    dataManager.synchronizeDashboardData();
-    dataManager.synchronizeMapData();
-    console.log("Synchronized dashboard data.")
-}, 300000);
 </script>
 
 <template>

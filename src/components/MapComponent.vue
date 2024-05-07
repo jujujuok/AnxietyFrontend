@@ -56,6 +56,13 @@ onMounted(async () => {
 
     updateMap();
     checkVisiblePolygons();
+
+    //Update map data every 5 minutes
+    setInterval(() => {
+        dataManager.synchronizeMapData();
+        updatePolygons();
+        console.log("Synchronized map data.")
+    }, 300000);
 });
 
 function updateMap() {
@@ -64,6 +71,10 @@ function updateMap() {
     callApi(props.url).then(data => dataManager.saveMapData(data));
     data.value = dataManager.getMapData();
 
+    updatePolygons();
+}
+
+function updatePolygons() {
     data.value.forEach(item => {
         let item_color = 'red';
         let pop = item.title;
