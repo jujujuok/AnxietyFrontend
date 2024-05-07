@@ -21,6 +21,7 @@ const showWarningsList = ref(true);
 const selectedWarning = ref({});
 const data = ref([]);
 const visibleInfos = ref([]);
+const polygons = ref([]);
 
 async function callApi(url) {
     try {
@@ -49,7 +50,7 @@ onMounted(async () => {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map.value);
 
-    map.value.on("moveend", function (e){
+    map.value.on("moveend", function () {
         checkVisiblePolygons();
     });
 
@@ -86,13 +87,13 @@ function updateMap() {
 
         const polygon = L.polygon(coords, {color: item_color}).addTo(map.value);
         polygon.bindPopup(pop);
-        polygon.on('mouseover', function (e) {
+        polygon.on('mouseover', function () {
             polygon.setStyle({fillOpacity: 0.7});
         });
-        polygon.on('mouseout', function (e) {
+        polygon.on('mouseout', function () {
             polygon.setStyle({fillOpacity: 0.2});
         });
-        polygon.on('click', function (e) {
+        polygon.on('click', function () {
             dashboardInfoService.fetchMapDetailsById(item.id).then(
                 (response) => {
                     console.log(response);
@@ -100,6 +101,8 @@ function updateMap() {
                     showDetails.value = !showDetails.value;
                 });
         });
+
+        polygons.value.push({id: item.id, polygon: polygon, itemColor: item_color});
     });
 }
 
@@ -109,8 +112,30 @@ function checkVisiblePolygons() {
         const polygon = L.polygon(warning.area);
         return mapBounds.intersects(polygon.getBounds());
     });
+}
 
-    console.log("Visible Warnings:", visibleInfos.value);
+function highlightArea(cardId) {
+    const polygonData = polygons.value.find(polygon => polygon.id === cardId);
+    const polygon = polygonData.polygon;
+    console.log()
+    if (polygon) {
+        polygon.setStyle(
+            {color: '#000000',
+                fillColor: polygonData.itemColor,
+                fillOpacity: 0.7}
+        );
+    }
+}
+
+function unhighlightArea(cardId) {
+    const polygonData = polygons.value.find(polygon => polygon.id === cardId);
+    const polygon = polygonData.polygon;
+    if (polygon) {
+        polygon.setStyle({
+                color: polygonData.itemColor,
+                fillOpacity: 0.2
+        });
+    }
 }
 
 watch(props, async () => {
@@ -121,12 +146,17 @@ watch(props, async () => {
 
 
 <template>
-    <v-btn style="box-shadow: none; margin-right: 1vh; position: absolute; top: 15vh; background-color: transparent; z-index: 1000;" icon @click="showWarningsList = true;">
+    <v-btn style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
+           @click="showWarningsList = true;">
         <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
-    <WarningsList v-model="showWarningsList" :warning-cards="visibleInfos" @go-back="showWarningsList = false;"></WarningsList>
+    <WarningsList v-model="showWarningsList" :warning-cards="visibleInfos"
+                  @go-back="showWarningsList = false;"
+                  @highlight-area="highlightArea"
+                  @unhighlight-area="unhighlightArea">
+    </WarningsList>
 </template>
 
 <style>
