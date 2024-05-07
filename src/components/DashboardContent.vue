@@ -175,7 +175,7 @@ function setIcon(cardType) {
 
 function openSideView(cardInfo) {
     try {
-        if (cardInfo.id != null && cardInfo.id > 0 && !dataManager.doDetailsExist(cardInfo.id)) {
+        if (cardInfo.id != null && cardInfo.id > 0 && !dataManager.doDashboardDetailsExist(cardInfo.id)) {
             DashboardInfoService.fetchCardDetailsById(cardInfo.id).then(
                 (response) => {
                     console.log(response);
@@ -184,11 +184,11 @@ function openSideView(cardInfo) {
                         selectedCard.value.area = cardInfo.area;
                     }
                     showDetails.value = true;
-                    dataManager.appendDetails(cardInfo.id, response);
+                    dataManager.appendDashboardDetails(cardInfo.id, response);
                 }
             );
         }else {
-            selectedCard.value = dataManager.getDetails(cardInfo.id);
+            selectedCard.value = dataManager.getDashboardDetails(cardInfo.id);
             showDetails.value = true;
         }
     } catch (error) {

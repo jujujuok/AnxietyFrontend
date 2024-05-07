@@ -34,8 +34,7 @@
 import { ref, defineProps } from 'vue';
 
 const props = defineProps({
-    cardInfoDetails: Object,
-    showDetails: Boolean
+    cardInfoDetails: Object
 });
 
 const iconMapping = {
@@ -52,6 +51,8 @@ const iconMapping = {
     affectedProducts: 'mdi-package-variant-closed',
     instruction: 'mdi-alert',
 };
+
+const showDetails = ref(false);
 
 const germanTranslations = {
     description: 'Beschreibung',
@@ -74,8 +75,6 @@ const formatValue = (key, value) => {
     }
     return value;
 };
-
-const showDetails = ref(false);
 </script>
 
 <style scoped>

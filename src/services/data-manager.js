@@ -62,7 +62,7 @@ class DataManager {
         }
     }
 
-    appendDetails(cardId, details) {
+    appendDashboardDetails(cardId, details) {
         let dashboardData = this.getDashboardData();
         const index = dashboardData.findIndex(item => item.id === cardId);
 
@@ -75,7 +75,7 @@ class DataManager {
         }
     }
 
-    doDetailsExist(cardId) {
+    doDashboardDetailsExist(cardId) {
         const dashboardData = this.getDashboardData();
         const index = dashboardData.findIndex(item => item.id === cardId);
 
@@ -86,7 +86,7 @@ class DataManager {
         }
     }
 
-    getDetails(cardId) {
+    getDashboardDetails(cardId) {
         const dashboardData = this.getDashboardData();
         const index = dashboardData.findIndex(item => item.id === cardId);
 
@@ -140,6 +140,42 @@ class DataManager {
             console.log('Map data synchronized successfully.');
         } catch (error) {
             console.error('Failed to synchronize map data:', error);
+        }
+    }
+
+    appendMapDetails(cardId, details) {
+        let mapData = this.getMapData();
+        const index = mapData.findIndex(item => item.id === cardId);
+
+        if (index !== -1 && !mapData[index].hasOwnProperty('details')) {
+            mapData[index].details = details;
+            localStorage.setItem('mapData', JSON.stringify(mapData));
+            console.log(`Details appended for card ID ${cardId}`);
+        } else {
+            console.log(`Details already exist for card ID ${cardId} or card not found.`);
+        }
+    }
+
+    doMapDetailsExist(cardId) {
+        const mapData = this.getMapData();
+        const index = mapData.findIndex(item => item.id === cardId);
+
+        if (index !== -1 && mapData[index].hasOwnProperty('details')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    getMapDetails(cardId) {
+        const mapData = this.getMapData();
+        const index = mapData.findIndex(item => item.id === cardId);
+
+        if (index !== -1 && mapData[index].hasOwnProperty('details')) {
+            console.log('Details found for card ID:', cardId);
+            return mapData[index].details;
+        } else {
+            return null;
         }
     }
 }

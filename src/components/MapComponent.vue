@@ -5,8 +5,8 @@ import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 import DataManager from "@/services/data-manager.js";
 import SideView from "@/components/SideView.vue";
-import dashboardInfoService from "@/services/dashboard-info-service.js";
 import WarningsList from "@/components/WarningsList.vue";
+import DashboardInfoService from "@/services/dashboard-info-service.js";
 
 let props = defineProps({
     start_lon: Number,
@@ -17,7 +17,7 @@ let props = defineProps({
 })
 const dataManager = new DataManager();
 const showDetails = ref(false);
-const showWarningsList = ref(true);
+const showWarning = ref(false);
 const selectedWarning = ref({});
 const data = ref([]);
 const visibleInfos = ref([]);
@@ -94,12 +94,7 @@ function updateMap() {
             polygon.setStyle({fillOpacity: 0.2});
         });
         polygon.on('click', function () {
-            dashboardInfoService.fetchMapDetailsById(item.id).then(
-                (response) => {
-                    console.log(response);
-                    selectedWarning.value = response;
-                    showDetails.value = !showDetails.value;
-                });
+            toggleDetails(item.id);
         });
 
         polygons.value.push({id: item.id, polygon: polygon, itemColor: item_color});
@@ -114,15 +109,36 @@ function checkVisiblePolygons() {
     });
 }
 
+function toggleDetails(cardId) {
+    try {
+        if (cardId != null && !dataManager.doMapDetailsExist(cardId)) {
+            DashboardInfoService.fetchMapDetailsById(cardId).then(
+                (response) => {
+                    console.log("Response: ", response);
+                    selectedWarning.value = response;
+                    dataManager.appendMapDetails(cardId, response);
+                }
+            );
+        } else {
+            selectedWarning.value = dataManager.getMapDetails(cardId);
+        }
+        showDetails.value = true;
+    } catch (error) {
+        console.error('Error fetching card details:', error);
+    }
+}
+
 function highlightArea(cardId) {
     const polygonData = polygons.value.find(polygon => polygon.id === cardId);
     const polygon = polygonData.polygon;
     console.log()
     if (polygon) {
         polygon.setStyle(
-            {color: '#000000',
+            {
+                color: 'black',
                 fillColor: polygonData.itemColor,
-                fillOpacity: 0.7}
+                fillOpacity: 0.7
+            }
         );
     }
 }
@@ -132,8 +148,8 @@ function unhighlightArea(cardId) {
     const polygon = polygonData.polygon;
     if (polygon) {
         polygon.setStyle({
-                color: polygonData.itemColor,
-                fillOpacity: 0.2
+            color: polygonData.itemColor,
+            fillOpacity: 0.2
         });
     }
 }
@@ -147,13 +163,13 @@ watch(props, async () => {
 
 <template>
     <v-btn style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
-           @click="showWarningsList = true;">
+           @click="showWarning = true;">
         <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
-    <WarningsList v-model="showWarningsList" :warning-cards="visibleInfos"
-                  @go-back="showWarningsList = false;"
+    <WarningsList v-model="showWarning" :warning-cards="visibleInfos"
+                  @go-back="showWarning = false;"
                   @highlight-area="highlightArea"
                   @unhighlight-area="unhighlightArea">
     </WarningsList>
