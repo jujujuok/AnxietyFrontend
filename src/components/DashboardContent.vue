@@ -77,6 +77,7 @@ import {getCountryDataList} from "countries-list";
 import {formatDistanceToNow} from "date-fns";
 import {de} from "date-fns/locale";
 import DataManager from "@/services/data-manager.js";
+import NotificationProvider from "@/services/notification-provider.js";
 
 const props = defineProps({
     type: String,

@@ -1,4 +1,5 @@
 import dashboardInfoService from "@/services/dashboard-info-service.js";
+import NotificationProvider from "@/services/notification-provider.js";
 
 class DataManager {
     saveDashboardData(data) {
@@ -105,6 +106,7 @@ class DataManager {
         //Add new data
         updateData.add.forEach(newItem => {
             if (!dashboardData.some(item => item.id === newItem.id)) {
+                NotificationProvider.showNotification(newItem.title, newItem.type);
                 dashboardData.push(newItem);
             }
         });
@@ -127,6 +129,7 @@ class DataManager {
 
             updateData.add.forEach(newItem => {
                 if (!mapData.some(item => item.id === newItem.id)) {
+                    NotificationProvider.showNotification(newItem.title, newItem.type);
                     mapData.push(newItem);
                 }
             });
