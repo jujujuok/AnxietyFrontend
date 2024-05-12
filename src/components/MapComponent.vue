@@ -1,6 +1,6 @@
 <script setup>
 
-import {ref, onMounted, watch} from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 import DataManager from "@/services/data-manager.js";
@@ -29,7 +29,7 @@ async function callApi(url) {
             'accept': 'application/json'
         };
 
-        const response = await fetch(url, {headers});
+        const response = await fetch(url, { headers });
         console.log(response);
 
         if (response.ok) {
@@ -81,34 +81,35 @@ function updatePolygons() {
         let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
         console.log("filter: ", props.filter, "item type: ", item.type)
 
-        switch (item.type) {
-            case "nina":
-                item_color = 'blue';
-                break;
-            case "weather":
-                item_color = 'green';
-                break;
-            case "street_report":
-                item_color = 'purple';
-                break;
-            default:
-                item_color = 'red';
-                break;
+        if (props.filter.includes(item.type)) {
+            switch (item.type) {
+                case "nina":
+                    item_color = 'blue';
+                    break;
+                case "weather":
+                    item_color = 'green';
+                    break;
+                case "street_report":
+                    item_color = 'purple';
+                    break;
+                default:
+                    item_color = 'red';
+                    break;
+            }
+            const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
+            polygon.bindPopup(pop);
+            polygon.on('mouseover', function () {
+                polygon.setStyle({ fillOpacity: 0.7 });
+            });
+            polygon.on('mouseout', function () {
+                polygon.setStyle({ fillOpacity: 0.2 });
+            });
+            polygon.on('click', function () {
+                toggleDetails(item.id);
+            });
+
+            polygons.value.push({ id: item.id, polygon: polygon, itemColor: item_color });
         }
-
-        const polygon = L.polygon(coords, {color: item_color}).addTo(map.value);
-        polygon.bindPopup(pop);
-        polygon.on('mouseover', function () {
-            polygon.setStyle({fillOpacity: 0.7});
-        });
-        polygon.on('mouseout', function () {
-            polygon.setStyle({fillOpacity: 0.2});
-        });
-        polygon.on('click', function () {
-            toggleDetails(item.id);
-        });
-
-        polygons.value.push({id: item.id, polygon: polygon, itemColor: item_color});
     });
 }
 
@@ -174,15 +175,13 @@ watch(props, async () => {
 
 <template>
     <v-btn style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
-           @click="showWarning = true;">
+        @click="showWarning = true;">
         <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
-    <WarningsList v-model="showWarning" :warning-cards="visibleInfos"
-                  @go-back="showWarning = false;"
-                  @highlight-area="highlightArea"
-                  @unhighlight-area="unhighlightArea">
+    <WarningsList v-model="showWarning" :warning-cards="visibleInfos" @go-back="showWarning = false;"
+        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea">
     </WarningsList>
 </template>
 
