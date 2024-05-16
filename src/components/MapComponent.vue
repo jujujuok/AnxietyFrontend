@@ -1,5 +1,4 @@
 <script setup>
-
 import { ref, onMounted, watch } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
@@ -8,170 +7,168 @@ import SideView from "@/components/SideView.vue";
 import WarningsList from "@/components/WarningsList.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 
+// Props definition
 let props = defineProps({
     start_lon: Number,
     start_lat: Number,
     zoom_start: Number,
     url: String,
-    filter: [],
-})
-const dataManager = new DataManager();
+    filter: Array,
+});
+
+// Reactive variables
 const showDetails = ref(false);
 const showWarning = ref(false);
 const selectedWarning = ref({});
-const data = ref([]);
+const data = ref([]); // All polygons and infos from localStorage
 const visibleInfos = ref([]);
-const polygons = ref([]);
+const polygons = ref([]); // Currently displayed polygons
 
-async function callApi(url) {
-    try {
-        const headers = {
-            'accept': 'application/json'
-        };
+// Data manager instance
+const dataManager = new DataManager();
 
-        const response = await fetch(url, { headers });
-        console.log(response);
-
-        if (response.ok) {
-            return await response.json();
-        }
-    } catch (e) {
-        console.error('Error while fetching map data: ', e);
-    }
-}
-
-const map = ref(L.Map);
-
+// Leaflet map instance
+const map = ref(null);
 
 onMounted(async () => {
+    initializeMap();
+    await fetchDataAndUpdateMap();
+    setAutoUpdate();
+});
+
+watch(() => props.filter, async () => {
+    await fetchDataAndUpdateMap();
+});
+
+// Function to initialize the Leaflet map
+function initializeMap() {
     map.value = L.map('map').setView([props.start_lon, props.start_lat], props.zoom_start);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map.value);
+    map.value.on("moveend", checkVisiblePolygons);
+}
 
-    map.value.on("moveend", function () {
-        checkVisiblePolygons();
-    });
-
-    updateMap();
-    checkVisiblePolygons();
-
-    //Update map data every 5 minutes
-    setInterval(() => {
-        dataManager.synchronizeMapData();
+// Function to fetch data and update the map
+async function fetchDataAndUpdateMap() {
+    if (!props.url || !props.filter) return;
+    try {
+        const dataFromApi = await callApi(props.url);
+        dataManager.saveMapData(dataFromApi);
+        data.value = dataManager.getMapData();
         updatePolygons();
-        console.log("Synchronized map data.")
-    }, 300000);
-});
-
-function updateMap() {
-    if (!props.filter) return;
-
-    callApi(props.url).then(data => dataManager.saveMapData(data));
-    data.value = dataManager.getMapData();
-
-    updatePolygons();
+        checkVisiblePolygons();
+    } catch (error) {
+        console.error('Error updating map:', error);
+    }
 }
 
-function updatePolygons() {
-    data.value.forEach(item => {
-        let item_color = 'red';
-        let pop = item.title;
-        let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
-        console.log("filter: ", props.filter, "item type: ", item.type)
-
-        if (props.filter.includes(item.type)) {
-            switch (item.type) {
-                case "nina":
-                    item_color = 'blue';
-                    break;
-                case "weather":
-                    item_color = 'green';
-                    break;
-                case "street_report":
-                    item_color = 'purple';
-                    break;
-                default:
-                    item_color = 'red';
-                    break;
-            }
-            const polygon = L.polygon(coords, { color: item_color }).addTo(map.value);
-            polygon.bindPopup(pop);
-            polygon.on('mouseover', function () {
-                polygon.setStyle({ fillOpacity: 0.7 });
-            });
-            polygon.on('mouseout', function () {
-                polygon.setStyle({ fillOpacity: 0.2 });
-            });
-            polygon.on('click', function () {
-                toggleDetails(item.id);
-            });
-
-            polygons.value.push({ id: item.id, polygon: polygon, itemColor: item_color });
+// Function to call API
+async function callApi(url) {
+    try {
+        const response = await fetch(url, { headers: { 'accept': 'application/json' } });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            throw new Error(`API call failed with status ${response.status}`);
         }
+    } catch (error) {
+        console.error('Error fetching map data:', error);
+    }
+}
+
+// Function to update polygons on the map
+function updatePolygons() {
+    // Remove existing polygons
+    clearPolygons();
+
+    // Add new polygons based on filter
+    data.value.forEach(item => {
+        if (props.filter.includes(item.type)) return;
+        const itemColor = getItemColor(item.type);
+        const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse()));
+        const polygon = createPolygon(coords, itemColor, item.title, item.id);
+        polygons.value.push({ id: item.id, polygon, itemColor });
     });
 }
 
+// Function to clear existing polygons from the map
+function clearPolygons() {
+    polygons.value.forEach(({ polygon }) => polygon.remove());
+    polygons.value = [];
+}
+
+// Function to get color based on item type
+function getItemColor(type) {
+    switch (type) {
+        case "nina": return 'blue';
+        case "weather": return 'green';
+        case "street_report": return 'purple';
+        default: return 'red';
+    }
+}
+
+// Function to create a polygon and add it to the map
+function createPolygon(coords, color, popupText, itemId) {
+    const polygon = L.polygon(coords, { color }).addTo(map.value);
+    polygon.bindPopup(popupText);
+    polygon.on('mouseover', () => polygon.setStyle({ fillOpacity: 0.7 }));
+    polygon.on('mouseout', () => polygon.setStyle({ fillOpacity: 0.2 }));
+    polygon.on('click', () => toggleDetails(itemId));
+    return polygon;
+}
+
+// Function to check which polygons are within the visible map bounds
 function checkVisiblePolygons() {
     const mapBounds = map.value.getBounds();
-    visibleInfos.value = data.value.filter(warning => {
-        const polygon = L.polygon(warning.area);
+    visibleInfos.value = data.value.filter(item => {
+        const polygon = L.polygon(item.area);
         return mapBounds.intersects(polygon.getBounds());
     });
 }
 
+// Function to toggle details visibility
 function toggleDetails(cardId) {
-    try {
-        if (cardId != null && !dataManager.doMapDetailsExist(cardId)) {
-            DashboardInfoService.fetchMapDetailsById(cardId).then(
-                (response) => {
-                    console.log("Response: ", response);
-                    selectedWarning.value = response;
-                    dataManager.appendMapDetails(cardId, response);
-                }
-            );
-        } else {
-            selectedWarning.value = dataManager.getMapDetails(cardId);
-        }
-        showDetails.value = true;
-    } catch (error) {
-        console.error('Error fetching card details:', error);
+    if (!cardId) return;
+    if (!dataManager.doMapDetailsExist(cardId)) {
+        DashboardInfoService.fetchMapDetailsById(cardId).then(response => {
+            selectedWarning.value = response;
+            dataManager.appendMapDetails(cardId, response);
+        }).catch(error => {
+            console.error('Error fetching card details:', error);
+        });
+    } else {
+        selectedWarning.value = dataManager.getMapDetails(cardId);
     }
+    showDetails.value = true;
 }
 
+// Function to highlight a specific area on the map
 function highlightArea(cardId) {
     const polygonData = polygons.value.find(polygon => polygon.id === cardId);
-    const polygon = polygonData.polygon;
-    console.log()
-    if (polygon) {
-        polygon.setStyle(
-            {
-                color: 'black',
-                fillColor: polygonData.itemColor,
-                fillOpacity: 0.7
-            }
-        );
+    if (polygonData) {
+        polygonData.polygon.setStyle({ color: 'black', fillColor: polygonData.itemColor, fillOpacity: 0.7 });
     }
 }
 
+// Function to unhighlight a specific area on the map
 function unhighlightArea(cardId) {
     const polygonData = polygons.value.find(polygon => polygon.id === cardId);
-    const polygon = polygonData.polygon;
-    if (polygon) {
-        polygon.setStyle({
-            color: polygonData.itemColor,
-            fillOpacity: 0.2
-        });
+    if (polygonData) {
+        polygonData.polygon.setStyle({ color: polygonData.itemColor, fillOpacity: 0.2 });
     }
 }
 
-watch(props, async () => {
-    console.log("watcher");
-    updateMap();
-});
+// Function to set automatic update for map data
+function setAutoUpdate() {
+    setInterval(async () => {
+        await dataManager.synchronizeMapData();
+        await fetchDataAndUpdateMap();
+        console.log("Synchronized map data.");
+    }, 300000); // 5 minutes
+}
 </script>
-
 
 <template>
     <v-btn style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
@@ -181,9 +178,10 @@ watch(props, async () => {
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
     <WarningsList v-model="showWarning" :warning-cards="visibleInfos" @go-back="showWarning = false;"
-        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea">
-    </WarningsList>
+        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea"/>
 </template>
+
+
 
 <style>
 #map {
@@ -191,7 +189,7 @@ watch(props, async () => {
 }
 
 @media (min-width: 1024px) {
-    .map {
+    #map {
         min-height: 100vh;
         display: flex;
         align-items: center;
