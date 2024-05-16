@@ -1,5 +1,5 @@
-import { createVuetify } from 'vuetify'
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { createVuetify } from 'vuetify';
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
@@ -39,7 +39,7 @@ const lightTheme = {
     'theme-code': '#F5F5F5',
     'theme-on-code': '#000000',
   }
-}
+};
 
 const vuetify = createVuetify({
   components,

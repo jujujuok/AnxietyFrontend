@@ -1,17 +1,14 @@
 <template>
     <v-navigation-drawer style="width: 60vh;" v-model="showDetails" location="right">
         <v-card class="ma-5 pa-4" outlined>
-            <v-img
-                :src="cardInfoDetails.image"
-                height="200px"
-                class="white--text align-end"
+            <v-img :src="cardInfoDetails.image" height="200px" class="white--text align-end"
                 gradient="to top right, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                v-if="cardInfoDetails.hasOwnProperty('image')"
-            ></v-img>
+                v-if="cardInfoDetails.hasOwnProperty('image')"></v-img>
             <v-card-text>
                 <v-list>
-                    <template v-for="(value, key) in cardInfoDetails">
-                        <v-list-item v-if="value && key !== 'image' && key !== 'link' && key !== 'type'">
+                    <template v-for="(value, key, index) in cardInfoDetails">
+                        <v-list-item v-if="value && key !== 'image' && key !== 'link' && key !== 'type'"
+                            :key="index">
                             <v-icon :icon="iconMapping[key]"></v-icon>
                             <span class="topic-title">{{ germanTranslations[key] }}:</span>
                             {{ formatValue(key, value) }}
@@ -19,7 +16,8 @@
                     </template>
                     <v-list-item>
                         <v-list-item-action>
-                            <v-btn v-if="cardInfoDetails.hasOwnProperty('link')" :href="cardInfoDetails.link" text color="primary" style="width: 100%; font-size: 10px;">
+                            <v-btn v-if="cardInfoDetails.hasOwnProperty('link')" :href="cardInfoDetails.link" text
+                                color="primary" style="width: 100%; font-size: 10px;">
                                 Weitere Informationen
                             </v-btn>
                         </v-list-item-action>
@@ -30,8 +28,9 @@
     </v-navigation-drawer>
 </template>
 
+
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     cardInfoDetails: Object
