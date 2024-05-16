@@ -6,7 +6,7 @@ import FilterComponent from '@/components/FilterComponent.vue'
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 
-const url = "http://api.risiko-radar.info/world-map";
+const url = "https://api.risiko-radar.info/world-map";
 
 const filter_names = ["interpol", ""];
 const filter_icons = [""];

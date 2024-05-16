@@ -55,6 +55,7 @@ async function fetchDataAndUpdateMap() {
     if (!props.url || !props.filter) return;
     try {
         const dataFromApi = await callApi(props.url);
+        console.log(dataFromApi);
         dataManager.saveMapData(dataFromApi);
         data.value = dataManager.getMapData();
         updatePolygons();

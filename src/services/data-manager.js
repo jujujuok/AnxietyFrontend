@@ -3,16 +3,18 @@ import NotificationProvider from "@/services/notification-provider.js";
 
 class DataManager {
     saveDashboardData(data) {
-        try {
-            const jsonData = JSON.stringify(data);
-            if(!localStorage.hasOwnProperty('dashboardData')) {
-                localStorage.setItem('dashboardData', jsonData);
-                console.log('Dashboard data saved successfully.');
-            } else {
-                console.log('Dashboard data already exists in localStorage.');
+        if(data !== null && data !== undefined){
+            try {
+                const jsonData = JSON.stringify(data);
+                if(!localStorage.hasOwnProperty('dashboardData')|| this.getDashboardData(jsonData).length === 0) {
+                    localStorage.setItem('dashboardData', jsonData);
+                    console.log('Dashboard data saved successfully.');
+                } else {
+                    console.log('Dashboard data already exists in localStorage.');
+                }
+            } catch (error) {
+                console.error('Failed to save dashboard data to localStorage:', error);
             }
-        } catch (error) {
-            console.error('Failed to save dashboard data to localStorage:', error);
         }
     }
 
@@ -33,23 +35,26 @@ class DataManager {
     }
 
     saveMapData(data) {
-        try {
-            const jsonData = JSON.stringify(data);
-            if(!localStorage.hasOwnProperty('mapData')) {
-                localStorage.setItem('mapData', jsonData);
-                console.log('Map data saved successfully.');
-            } else {
-                console.log('Map data already exists in localStorage.');
+        if(data !== null && data !== undefined){
+            try {
+                const jsonData = JSON.stringify(data);
+                if(!localStorage.hasOwnProperty('mapData') || this.getMapData(jsonData).length === 0) {
+                    localStorage.setItem('mapData', jsonData);
+                    console.log('Map data saved successfully.');
+                } else {
+                    console.log('Map data already exists in localStorage.');
+                }
+            } catch (error) {
+                console.error('Failed to save map data to localStorage:', error);
             }
-        } catch (error) {
-            console.error('Failed to save map data to localStorage:', error);
+        } else {
+            console.error("There is no data to save.");
         }
     }
 
     getMapData() {
         try {
             let jsonData = [];
-            console.log(localStorage.hasOwnProperty('mapData'));
             if(localStorage.hasOwnProperty('mapData')){
                 jsonData = localStorage.getItem('mapData');
                 return JSON.parse(jsonData);
