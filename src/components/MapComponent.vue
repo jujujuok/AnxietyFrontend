@@ -8,7 +8,6 @@ import WarningsList from "@/components/WarningsList.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import BOUNDARIES from "@/assets/world-administrative-boundaries.json"
 
-// Props definition
 let props = defineProps({
     start_lon: Number,
     start_lat: Number,
@@ -17,7 +16,6 @@ let props = defineProps({
     filter: Array,
 });
 
-// Reactive variables
 const showDetails = ref(false);
 const showWarning = ref(false);
 const selectedWarning = ref({});
@@ -25,10 +23,8 @@ const data = ref([]); // All polygons and infos from localStorage
 const visibleInfos = ref([]);
 const polygons = ref([]); // Currently displayed polygons
 
-// Data manager instance
 const dataManager = new DataManager();
 
-// Leaflet map instance
 const map = ref(null);
 
 onMounted(async () => {
@@ -52,7 +48,6 @@ function initializeMap() {
     map.value.on("moveend", checkVisiblePolygons);
 }
 
-// Function to fetch data and update the map
 async function fetchDataAndUpdateMap() {
     if (!props.url) return;
     try {
@@ -67,7 +62,6 @@ async function fetchDataAndUpdateMap() {
     }
 }
 
-// Function to call API
 async function callApi(url) {
     try {
         const response = await fetch(url, { headers: { 'accept': 'application/json' } });
@@ -81,7 +75,6 @@ async function callApi(url) {
     }
 }
 
-// Function to update polygons on the map
 function updatePolygons() {
     // Remove existing polygons
     clearPolygons();
@@ -92,54 +85,44 @@ function updatePolygons() {
      * else: get area from the world-administrative-boundaries.json
      */
 
-     console.log("size: ", data.value.length)
+    console.log("size: ", data.value.length)
 
     data.value.forEach(item => {
         if (item.hasOwnProperty('area')) {
             // "area" exists, use it
             const itemColor = getItemColor(item.type);
-            const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse())); 
+            const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse()));
 
             const polygon = createPolygon(coords, itemColor, item.title, item.id);
             polygons.value.push({ id: item.id, polygon, itemColor });
         } else if (item.hasOwnProperty("iso3")) {
-            console.log("TEST2")
             // "area" doesn't exist, use iso3 from BOUNDARIES
             const itemColor = 'blue'; // Or default color
             const boundaryData = BOUNDARIES.find(country => country.iso3 === item.iso3);
             if (boundaryData) {
-                const coords = boundaryData.geo_shape.geometry.coordinates.map(innerArray => innerArray.map(coord => coord.reverse()));;
-                const polygon = createPolygon(coords, itemColor, item.id);
+                const coords = boundaryData.geo_shape.geometry.coordinates.map(innerArray =>
+                    innerArray.map(item =>
+                        Array.isArray(item) ? item.reverse() : item
+                    )
+                );
+
+                const polygon = createPolygon(coords, itemColor, item.country, item.id);
                 polygons.value.push({ id: item.id, polygon, itemColor });
-            } 
+            }
             else {
-                console.warn("Missing boundary data for iso3:", item.iso3); // Handle missing data
+                console.warn("Missing boundary data for iso3:", item.iso3);
             }
         } else {
-            console.warn("Missing area or iso3 code for item:", item); // Handle missing data
+            console.warn("Missing area or iso3 code for item:", item);
         }
     });
 }
-// Recursive function to reverse coordinates at all levels
-function reverseCoords(coords) {
-        return coords.map(innerArray => {
-            if (Array.isArray(innerArray)) {
-                return reverseCoords(innerArray); // Recursive call for nested arrays
-            } else {
-                return innerArray.reverse(); // Reverse individual coordinates
-            }
-        });
-    }
 
-
-
-// Function to clear existing polygons from the map
 function clearPolygons() {
     polygons.value.forEach(({ polygon }) => polygon.remove());
     polygons.value = [];
 }
 
-// Function to get color based on item type
 function getItemColor(type) {
     switch (type) {
         case "nina": return 'blue';
@@ -149,8 +132,7 @@ function getItemColor(type) {
     }
 }
 
-// Function to create a polygon and add it to the map
-function createPolygon(coords, color, popupText="", itemId) {
+function createPolygon(coords, color, popupText = "", itemId) {
     const polygon = L.polygon(coords, { color }).addTo(map.value);
     polygon.bindPopup(popupText);
     polygon.on('mouseover', () => polygon.setStyle({ fillOpacity: 0.7 }));
@@ -159,7 +141,6 @@ function createPolygon(coords, color, popupText="", itemId) {
     return polygon;
 }
 
-// Function to check which polygons are within the visible map bounds
 function checkVisiblePolygons() {
     const mapBounds = map.value.getBounds();
     visibleInfos.value = data.value.filter(item => {
@@ -168,7 +149,6 @@ function checkVisiblePolygons() {
     });
 }
 
-// Function to toggle details visibility
 function toggleDetails(cardId) {
     if (!cardId) return;
     if (!dataManager.doMapDetailsExist(cardId)) {
@@ -184,7 +164,6 @@ function toggleDetails(cardId) {
     showDetails.value = true;
 }
 
-// Function to highlight a specific area on the map
 function highlightArea(cardId) {
     const polygonData = polygons.value.find(polygon => polygon.id === cardId);
     if (polygonData) {
@@ -192,7 +171,6 @@ function highlightArea(cardId) {
     }
 }
 
-// Function to unhighlight a specific area on the map
 function unhighlightArea(cardId) {
     const polygonData = polygons.value.find(polygon => polygon.id === cardId);
     if (polygonData) {
@@ -218,9 +196,7 @@ function setAutoUpdate() {
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
     <WarningsList v-model="showWarning" :warning-cards="visibleInfos" @go-back="showWarning = false;"
-        @highlight-area="highlightArea"
-        @unhighlight-area="unhighlightArea"
-        @show-details="toggleDetails"/>
+        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea" @show-details="toggleDetails" />
 </template>
 
 
