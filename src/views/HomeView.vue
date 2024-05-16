@@ -5,7 +5,7 @@ import Home from '@/components/Home.vue'
 </script>
 
 <template>
-  <Home msg="Welcome to the official AnxietyProject" />
+  <Home msg="Welcome to the Risiko-Radar" />
 
   <div class="text home">
     <h1 class="text-highlight">Home</h1>

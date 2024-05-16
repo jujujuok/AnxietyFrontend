@@ -17,7 +17,7 @@
             <v-card
                     :style="{ backgroundColor: typeColor[card.type], padding: '2vh', margin: '1vh 3vh' }"
                     v-for="card in warningCards" :key="card.id"
-                    @click="selectCard(card.id)"
+                    @click="$emit('showDetails', card.id)"
                     @mouseover="$emit('highlightArea', card.id);"
                     @mouseout="$emit('unhighlightArea', card.id);"
             >
@@ -48,34 +48,10 @@ const typeColor = {
     "default": "#DA5450"
 }
 
-const dataManager = new DataManager();
-
 const showWarningsList = defineModel();
 const selectedOrder = ref('Aufsteigend');
 const showDetails = ref(false);
 const selectedWarning = ref({});
-
-function selectCard(cardId) {
-    try {
-        if (showDetails.value === false) {
-            if (cardId != null && !dataManager.doMapDetailsExist(cardId)) {
-                DashboardInfoService.fetchMapDetailsById(cardId).then(
-                    (response) => {
-                        console.log("Response: ", response);
-                        selectedWarning.value = response;
-                        dataManager.appendMapDetails(cardId, response);
-                    }
-                );
-            } else {
-                selectedWarning.value = dataManager.getMapDetails(cardId);
-            }
-        }
-        showDetails.value = !showDetails.value;
-        console.log("showDetails: ", showDetails.value);
-    } catch (error) {
-        console.error('Error fetching card details:', error);
-    }
-}
 </script>
 
 <style scoped>
