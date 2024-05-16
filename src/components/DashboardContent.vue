@@ -53,7 +53,7 @@
                                 </div>
                             </td>
                             <td>
-                                <v-list-item-subtitle class="time-text">{{
+                                <v-list-item-subtitle v-if="cardInfo.hasOwnProperty('publishedDate')" class="time-text">{{
                                         formatPublishedDate(parseInt(cardInfo.publishedDate))
                                     }}
                                 </v-list-item-subtitle>
@@ -102,7 +102,7 @@ async function updateSelected(newValue) {
 const APIType = {
     'travel-warnings': 'travel_warning',
     'food-product-warnings': ['food_warning', 'product_warning'],
-    'embassies': 'country_representative',
+    'embassies': 'embassy',
     'interpol': 'interpol_red'
 };
 
@@ -169,6 +169,8 @@ function setIcon(cardType) {
             return 'mdi-briefcase-account';
         case 'interpol_red':
             return 'mdi-account-search';
+        case 'embassy':
+            return 'mdi-bank';
         default:
             return 'mdi-alert';
     }
@@ -176,7 +178,7 @@ function setIcon(cardType) {
 
 function openSideView(cardInfo) {
     try {
-        if (cardInfo.id != null && cardInfo.id > 0 && !dataManager.doDashboardDetailsExist(cardInfo.id)) {
+        if (cardInfo.id != null && !dataManager.doDashboardDetailsExist(cardInfo.id)) {
             DashboardInfoService.fetchCardDetailsById(cardInfo.id).then(
                 (response) => {
                     console.log(response);
@@ -219,6 +221,7 @@ function filterData() {
         }
     } else {
         //TODO other selected buttons
+        console.log(unfilteredData.filter((card) => card.type === filters));
         cardInfos.value = unfilteredData.filter((card) => card.type === filters);
     }
 }

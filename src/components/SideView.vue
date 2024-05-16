@@ -50,6 +50,9 @@ const iconMapping = {
     category: 'mdi-tag',
     affectedProducts: 'mdi-package-variant-closed',
     instruction: 'mdi-alert',
+    address: 'mdi-map-marker',
+    phone: 'mdi-phone',
+    mail: 'mdi-email'
 };
 
 const showDetails = ref(false);
@@ -66,7 +69,10 @@ const germanTranslations = {
     link: 'Link',
     category: 'Kategorie',
     affectedProducts: 'Betroffene Produkte',
-    instruction: 'Anweisung'
+    instruction: 'Anweisung',
+    address: 'Adresse',
+    phone: 'Telefon',
+    mail: 'E-Mail'
 };
 
 const formatValue = (key, value) => {
