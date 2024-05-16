@@ -88,12 +88,11 @@ function updatePolygons() {
     console.log("size: ", data.value.length)
 
     data.value.forEach(item => {
-        if (!props.filter.includes(item.type)) {
-            return;
-        }
 
         if (item.hasOwnProperty('area')) {
             // "area" exists, use it
+            if (props.filter.includes(item.type)) return;
+
             const itemColor = getItemColor(item.type);
             const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse()));
 
@@ -101,6 +100,7 @@ function updatePolygons() {
             polygons.value.push({ id: item.id, polygon, itemColor });
         } else if (item.hasOwnProperty("iso3")) {
             // "area" doesn't exist, use iso3 from BOUNDARIES
+
             const itemColor = 'blue'; // Or default color
             const boundaryData = BOUNDARIES.find(country => country.iso3 === item.iso3);
             if (boundaryData) {
