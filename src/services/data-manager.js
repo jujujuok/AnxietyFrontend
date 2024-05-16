@@ -6,7 +6,7 @@ class DataManager {
         if(data !== null && data !== undefined){
             try {
                 const jsonData = JSON.stringify(data);
-                if(!localStorage.hasOwnProperty('dashboardData')|| this.getDashboardData(jsonData).length === 0) {
+                if(!localStorage.hasOwnProperty('dashboardData')|| localStorage.getItem('dashboardData') === "undefined" || this.getDashboardData(jsonData).length === 0) {
                     localStorage.setItem('dashboardData', jsonData);
                     console.log('Dashboard data saved successfully.');
                 } else {
@@ -23,6 +23,10 @@ class DataManager {
             let jsonData = [];
             if (localStorage.hasOwnProperty('dashboardData')){
                 jsonData = localStorage.getItem('dashboardData')
+                if(jsonData === "undefined"){
+                    console.error("Dashboard data is undefined.");
+                    return null;
+                }
                 return JSON.parse(jsonData);
             } else {
                 console.log('No dashboard data found in localStorage.');
@@ -38,7 +42,8 @@ class DataManager {
         if(data !== null && data !== undefined){
             try {
                 const jsonData = JSON.stringify(data);
-                if(!localStorage.hasOwnProperty('mapData') || this.getMapData(jsonData).length === 0) {
+                console.log(jsonData);
+                if(!localStorage.hasOwnProperty('mapData') || localStorage.getItem('mapData') === "undefined" || this.getMapData(jsonData).length === 0){
                     localStorage.setItem('mapData', jsonData);
                     console.log('Map data saved successfully.');
                 } else {
@@ -57,6 +62,10 @@ class DataManager {
             let jsonData = [];
             if(localStorage.hasOwnProperty('mapData')){
                 jsonData = localStorage.getItem('mapData');
+                if(jsonData === "undefined"){
+                    console.error("Map data is undefined.");
+                    return null;
+                }
                 return JSON.parse(jsonData);
             } else {
                 console.log('No map data found in localStorage.');
