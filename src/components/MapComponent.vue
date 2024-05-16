@@ -60,6 +60,7 @@ onMounted(async () => {
     //Update map data every 5 minutes
     setInterval(() => {
         dataManager.synchronizeMapData();
+        data.value = dataManager.getMapData();
         updatePolygons();
         console.log("Synchronized map data.")
     }, 300000);
@@ -75,11 +76,11 @@ function updateMap() {
 }
 
 function updatePolygons() {
+    polygons.value = [];
     data.value.forEach(item => {
         let item_color = 'red';
         let pop = item.title;
         let coords = [[item.area.map(innerArray => innerArray.map(coord => coord.reverse()))]];
-        console.log("filter: ", props.filter, "item type: ", item.type)
 
         if (props.filter.includes(item.type)) {
             switch (item.type) {
@@ -167,7 +168,6 @@ function unhighlightArea(cardId) {
 }
 
 watch(props, async () => {
-    console.log("watcher");
     updateMap();
 });
 </script>
