@@ -23,6 +23,7 @@
                         class="select-area"
                 ></v-select>
                 <v-select
+                        v-if="props.type === 'food-product-warnings'"
                         v-model="selectedOrder"
                         label="Reihenfolge"
                         :items="['Aufsteigend', 'Absteigend']"
@@ -49,7 +50,7 @@
                                     <v-icon style="margin-right: 1vh;">
                                         {{ setIcon(cardInfo.type) }}
                                     </v-icon>
-                                    <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ cardInfo.title }}</v-list-item-title>
+                                    <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ formatTitle(cardInfo) }}</v-list-item-title>
                                 </div>
                             </td>
                             <td>
@@ -112,6 +113,13 @@ const selectLabel = computed(() => {
 
 function formatPublishedDate(publishedDate) {
     return formatDistanceToNow(new Date(publishedDate), {addSuffix: true, locale: de});
+}
+
+function formatTitle(card) {
+    if (props.type === "embassies" && card.hasOwnProperty('country')) {
+        return `${card.country} - ${card.title}`;
+    }
+    return card.title;
 }
 
 function getSelectedButtonValues() {
