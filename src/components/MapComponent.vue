@@ -6,6 +6,7 @@ import DataManager from "@/services/data-manager.js";
 import SideView from "@/components/SideView.vue";
 import WarningsList from "@/components/WarningsList.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
+import BOUNDARIES from "@/assets/world-administrative-boundaries.json"
 
 // Props definition
 let props = defineProps({
@@ -31,6 +32,7 @@ const dataManager = new DataManager();
 const map = ref(null);
 
 onMounted(async () => {
+    localStorage.clear();
     initializeMap();
     await fetchDataAndUpdateMap();
     setAutoUpdate();
@@ -52,10 +54,10 @@ function initializeMap() {
 
 // Function to fetch data and update the map
 async function fetchDataAndUpdateMap() {
-    if (!props.url || !props.filter) return;
+    if (!props.url) return;
     try {
         const dataFromApi = await callApi(props.url);
-        console.log(dataFromApi);
+        console.log("data from api: ", dataFromApi);
         dataManager.saveMapData(dataFromApi);
         data.value = dataManager.getMapData();
         updatePolygons();
@@ -85,14 +87,51 @@ function updatePolygons() {
     clearPolygons();
 
     // Add new polygons based on filter
+    /**
+     * if area in data.values use this, 
+     * else: get area from the world-administrative-boundaries.json
+     */
+
+     console.log("size: ", data.value.length)
+
     data.value.forEach(item => {
-        if (props.filter.includes(item.type)) return;
-        const itemColor = getItemColor(item.type);
-        const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse()));
-        const polygon = createPolygon(coords, itemColor, item.title, item.id);
-        polygons.value.push({ id: item.id, polygon, itemColor });
+        if (item.hasOwnProperty('area')) {
+            // "area" exists, use it
+            const itemColor = getItemColor(item.type);
+            const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse())); 
+
+            const polygon = createPolygon(coords, itemColor, item.title, item.id);
+            polygons.value.push({ id: item.id, polygon, itemColor });
+        } else if (item.hasOwnProperty("iso3")) {
+            console.log("TEST2")
+            // "area" doesn't exist, use iso3 from BOUNDARIES
+            const itemColor = 'blue'; // Or default color
+            const boundaryData = BOUNDARIES.find(country => country.iso3 === item.iso3);
+            if (boundaryData) {
+                const coords = boundaryData.geo_shape.geometry.coordinates.map(innerArray => innerArray.map(coord => coord.reverse()));;
+                const polygon = createPolygon(coords, itemColor, item.id);
+                polygons.value.push({ id: item.id, polygon, itemColor });
+            } 
+            else {
+                console.warn("Missing boundary data for iso3:", item.iso3); // Handle missing data
+            }
+        } else {
+            console.warn("Missing area or iso3 code for item:", item); // Handle missing data
+        }
     });
 }
+// Recursive function to reverse coordinates at all levels
+function reverseCoords(coords) {
+        return coords.map(innerArray => {
+            if (Array.isArray(innerArray)) {
+                return reverseCoords(innerArray); // Recursive call for nested arrays
+            } else {
+                return innerArray.reverse(); // Reverse individual coordinates
+            }
+        });
+    }
+
+
 
 // Function to clear existing polygons from the map
 function clearPolygons() {
@@ -104,7 +143,6 @@ function clearPolygons() {
 function getItemColor(type) {
     switch (type) {
         case "nina": return 'blue';
-        case "travel_warning": return 'blue';
         case "weather": return 'green';
         case "street_report": return 'purple';
         default: return 'red';
@@ -112,7 +150,7 @@ function getItemColor(type) {
 }
 
 // Function to create a polygon and add it to the map
-function createPolygon(coords, color, popupText, itemId) {
+function createPolygon(coords, color, popupText="", itemId) {
     const polygon = L.polygon(coords, { color }).addTo(map.value);
     polygon.bindPopup(popupText);
     polygon.on('mouseover', () => polygon.setStyle({ fillOpacity: 0.7 }));

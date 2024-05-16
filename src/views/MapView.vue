@@ -2,13 +2,12 @@
 
 import MapComponent from "@/components/MapComponent.vue"
 import "leaflet/dist/leaflet.css";
-import { ref } from 'vue';
 
 import { VBtn, VBtnToggle } from 'vuetify/components';
 
 const filter = defineModel({ default: [] });
 
-const url = "https://api.risiko-radar.info/map";
+const url = "http://api.risiko-radar.info/map";
 
 </script>
 
