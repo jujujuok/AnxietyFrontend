@@ -1,5 +1,8 @@
 <template>
     <v-navigation-drawer style="width: 60vh;" v-model="showDetails" location="right">
+        <v-btn style="box-shadow: none; margin-right: 1vh;" icon @click="showDetails = false;">
+            <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
         <v-card class="ma-5 pa-4" outlined>
             <v-img :src="cardInfoDetails.image" height="200px" class="white--text align-end"
                 gradient="to top right, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -51,7 +54,7 @@ const iconMapping = {
     instruction: 'mdi-alert',
 };
 
-const showDetails = ref(false);
+const showDetails = defineModel();
 
 const germanTranslations = {
     description: 'Beschreibung',
