@@ -104,6 +104,7 @@ function clearPolygons() {
 function getItemColor(type) {
     switch (type) {
         case "nina": return 'blue';
+        case "travel_warning": return 'blue';
         case "weather": return 'green';
         case "street_report": return 'purple';
         default: return 'red';
