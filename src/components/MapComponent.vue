@@ -180,7 +180,7 @@ function setAutoUpdate() {
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
     <WarningsList v-model="showWarning" :warning-cards="visibleInfos" @go-back="showWarning = false;"
-        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea"/>
+        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea" />
 </template>
 
 

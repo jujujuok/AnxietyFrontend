@@ -12,7 +12,7 @@ const url = "https://api.risiko-radar.info/world-map";
   <!-- displays travel warnings -->
 
   <div id="container">
-    <MapComponent :start_lon="29.718582" :start_lat="19.152399" :zoom_start="2" :url="url"/>
+    <MapComponent :start_lon="29.718582" :start_lat="19.152399" :zoom_start="2" :url="url" />
   </div>
 </template>
 
