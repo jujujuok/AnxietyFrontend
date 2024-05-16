@@ -52,7 +52,10 @@ const iconMapping = {
     instruction: 'mdi-alert',
     address: 'mdi-map-marker',
     phone: 'mdi-phone',
-    mail: 'mdi-email'
+    mail: 'mdi-email',
+    aktuell: 'mdi-pulse',
+    sicherheit: 'mdi-alert',
+    gesundheit: 'mdi-hospital-building'
 };
 
 const showDetails = ref(false);
@@ -72,7 +75,10 @@ const germanTranslations = {
     instruction: 'Anweisung',
     address: 'Adresse',
     phone: 'Telefon',
-    mail: 'E-Mail'
+    mail: 'E-Mail',
+    aktuell: 'Aktuell',
+    sicherheit: 'Sicherheit',
+    gesundheit: 'Gesundheit'
 };
 
 const formatValue = (key, value) => {

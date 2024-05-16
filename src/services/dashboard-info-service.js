@@ -1,9 +1,10 @@
 import axios from 'axios';
-
 class DashboardInfoService {
+
     constructor() {
-        this.baseUrl = 'https://api.risiko-radar.info';
+        this.baseUrl = 'http://api.risiko-radar.info';
     }
+
     async getDashboardInfos() {
         return axios.get(`${this.baseUrl}/dashboard`)
             .then(response => {

@@ -5,7 +5,7 @@
                     cols="12"
                     class="d-flex justify-space-between"
             >
-                <div class="button-container">
+                <div class="button-container" v-if="props.type === 'food-product-warnings'">
                     <SelectedButton
                             v-for="btn in getSelectedButtonValues()"
                             :key="btn.value"
@@ -17,10 +17,18 @@
                     </SelectedButton>
                 </div>
                 <v-select
-                        v-model="selectedArea"
-                        :items="setSelectButtonContent(type)"
-                        :label="selectLabel"
-                        class="select-area"
+                    v-if="props.type === 'food-product-warnings'"
+                    v-model="selectedArea"
+                    :items="setSelectButtonContent(props.type)"
+                    :label="selectLabel"
+                    class="select-area"
+                ></v-select>
+                <v-select
+                    v-if="props.type === 'embassies'"
+                    v-model="selectedCountry"
+                    :items="setSelectButtonContent(props.type)"
+                    :label="selectLabel"
+                    class="select-area"
                 ></v-select>
                 <v-select
                         v-if="props.type === 'food-product-warnings'"
@@ -90,6 +98,7 @@ const cardInfos = ref([]);
 const selectedCard = ref({});
 const showDetails = ref(false);
 const selectedArea = ref(null);
+const selectedCountry = ref(null);
 const selectedOrder = ref('Aufsteigend');
 let selected = ref(getSelectedButtonValues()[0].value);
 let isLoading = ref(false);
@@ -118,6 +127,8 @@ function formatPublishedDate(publishedDate) {
 function formatTitle(card) {
     if (props.type === "embassies" && card.hasOwnProperty('country')) {
         return `${card.country} - ${card.title}`;
+} else if(props.type === 'travel-warnings' && card.hasOwnProperty('country') && card.hasOwnProperty('severity')){
+        return `${card.country} - ${card.severity}`;
     }
     return card.title;
 }
@@ -227,9 +238,9 @@ function filterData() {
                 cardInfos.value = unfilteredData.filter((card) => (selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]) || card.type === filters[1]);
                 break;
         }
+    } else if(props.type === 'embassies') {
+        cardInfos.value = unfilteredData.filter((card) => selectedCountry.value ? card.type === filters && card.country === selectedCountry.value : card.type === filters);
     } else {
-        //TODO other selected buttons
-        console.log(unfilteredData.filter((card) => card.type === filters));
         cardInfos.value = unfilteredData.filter((card) => card.type === filters);
     }
 }
@@ -272,6 +283,10 @@ setInterval(() => {
 watch(selectedArea, () => {
     filterData();
     sortData();
+});
+
+watch(selectedCountry, () => {
+    filterData();
 });
 </script>
 
