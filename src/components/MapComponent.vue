@@ -88,6 +88,10 @@ function updatePolygons() {
     console.log("size: ", data.value.length)
 
     data.value.forEach(item => {
+        if (!props.filter.includes(item.type)) {
+            return;
+        }
+
         if (item.hasOwnProperty('area')) {
             // "area" exists, use it
             const itemColor = getItemColor(item.type);
