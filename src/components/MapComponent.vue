@@ -91,7 +91,7 @@ function updatePolygons() {
 
         if (item.hasOwnProperty('area')) {
             // "area" exists, use it
-            if (props.filter.includes(item.type)) return;
+            if (!props.filter.includes(item.type)) return;
 
             const itemColor = getItemColor(item.type);
             const coords = item.area.map(innerArray => innerArray.map(coord => coord.reverse()));
