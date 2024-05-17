@@ -52,6 +52,12 @@ const iconMapping = {
     category: 'mdi-tag',
     affectedProducts: 'mdi-package-variant-closed',
     instruction: 'mdi-alert',
+    address: 'mdi-map-marker',
+    phone: 'mdi-phone',
+    mail: 'mdi-email',
+    aktuell: 'mdi-pulse',
+    sicherheit: 'mdi-alert',
+    gesundheit: 'mdi-hospital-building'
 };
 
 const showDetails = defineModel();
@@ -68,7 +74,13 @@ const germanTranslations = {
     link: 'Link',
     category: 'Kategorie',
     affectedProducts: 'Betroffene Produkte',
-    instruction: 'Anweisung'
+    instruction: 'Anweisung',
+    address: 'Adresse',
+    phone: 'Telefon',
+    mail: 'E-Mail',
+    aktuell: 'Aktuell',
+    sicherheit: 'Sicherheit',
+    gesundheit: 'Gesundheit'
 };
 
 const formatValue = (key, value) => {

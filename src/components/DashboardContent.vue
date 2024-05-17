@@ -5,7 +5,7 @@
                     cols="12"
                     class="d-flex justify-space-between"
             >
-                <div class="button-container">
+                <div class="button-container" v-if="props.type === 'food-product-warnings'">
                     <SelectedButton
                             v-for="btn in getSelectedButtonValues()"
                             :key="btn.value"
@@ -17,12 +17,21 @@
                     </SelectedButton>
                 </div>
                 <v-select
-                        v-model="selectedArea"
-                        :items="setSelectButtonContent(type)"
-                        :label="selectLabel"
-                        class="select-area"
+                    v-if="props.type === 'food-product-warnings'"
+                    v-model="selectedArea"
+                    :items="setSelectButtonContent(props.type)"
+                    :label="selectLabel"
+                    class="select-area"
                 ></v-select>
                 <v-select
+                    v-if="props.type === 'embassies'"
+                    v-model="selectedCountry"
+                    :items="setSelectButtonContent(props.type)"
+                    :label="selectLabel"
+                    class="select-area"
+                ></v-select>
+                <v-select
+                        v-if="props.type === 'food-product-warnings'"
                         v-model="selectedOrder"
                         label="Reihenfolge"
                         :items="['Aufsteigend', 'Absteigend']"
@@ -49,11 +58,11 @@
                                     <v-icon style="margin-right: 1vh;">
                                         {{ setIcon(cardInfo.type) }}
                                     </v-icon>
-                                    <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ cardInfo.title }}</v-list-item-title>
+                                    <v-list-item-title style="white-space: normal;" :title="cardInfo.title">{{ formatTitle(cardInfo) }}</v-list-item-title>
                                 </div>
                             </td>
                             <td>
-                                <v-list-item-subtitle class="time-text">{{
+                                <v-list-item-subtitle v-if="cardInfo.hasOwnProperty('publishedDate')" class="time-text">{{
                                         formatPublishedDate(parseInt(cardInfo.publishedDate))
                                     }}
                                 </v-list-item-subtitle>
@@ -89,6 +98,7 @@ const cardInfos = ref([]);
 const selectedCard = ref({});
 const showDetails = ref(false);
 const selectedArea = ref(null);
+const selectedCountry = ref(null);
 const selectedOrder = ref('Aufsteigend');
 let selected = ref(getSelectedButtonValues()[0].value);
 let isLoading = ref(false);
@@ -102,7 +112,7 @@ async function updateSelected(newValue) {
 const APIType = {
     'travel-warnings': 'travel_warning',
     'food-product-warnings': ['food_warning', 'product_warning'],
-    'embassies': 'country_representative',
+    'embassies': 'embassy',
     'interpol': 'interpol_red'
 };
 
@@ -112,6 +122,15 @@ const selectLabel = computed(() => {
 
 function formatPublishedDate(publishedDate) {
     return formatDistanceToNow(new Date(publishedDate), {addSuffix: true, locale: de});
+}
+
+function formatTitle(card) {
+    if (props.type === "embassies" && card.hasOwnProperty('country')) {
+        return `${card.country} - ${card.title}`;
+} else if(props.type === 'travel-warnings' && card.hasOwnProperty('country') && card.hasOwnProperty('severity')){
+        return `${card.country} - ${card.severity}`;
+    }
+    return card.title;
 }
 
 function getSelectedButtonValues() {
@@ -169,6 +188,8 @@ function setIcon(cardType) {
             return 'mdi-briefcase-account';
         case 'interpol_red':
             return 'mdi-account-search';
+        case 'embassy':
+            return 'mdi-bank';
         default:
             return 'mdi-alert';
     }
@@ -176,7 +197,7 @@ function setIcon(cardType) {
 
 function openSideView(cardInfo) {
     try {
-        if (cardInfo.id != null && cardInfo.id > 0 && !dataManager.doDashboardDetailsExist(cardInfo.id)) {
+        if (cardInfo.id != null && !dataManager.doDashboardDetailsExist(cardInfo.id)) {
             DashboardInfoService.fetchCardDetailsById(cardInfo.id).then(
                 (response) => {
                     console.log(response);
@@ -217,8 +238,9 @@ function filterData() {
                 cardInfos.value = unfilteredData.filter((card) => (selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]) || card.type === filters[1]);
                 break;
         }
+    } else if(props.type === 'embassies') {
+        cardInfos.value = unfilteredData.filter((card) => selectedCountry.value ? card.type === filters && card.country === selectedCountry.value : card.type === filters);
     } else {
-        //TODO other selected buttons
         cardInfos.value = unfilteredData.filter((card) => card.type === filters);
     }
 }
@@ -261,6 +283,10 @@ setInterval(() => {
 watch(selectedArea, () => {
     filterData();
     sortData();
+});
+
+watch(selectedCountry, () => {
+    filterData();
 });
 </script>
 

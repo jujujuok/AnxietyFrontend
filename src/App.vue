@@ -7,7 +7,6 @@ import {VIcon} from 'vuetify/components';
   <v-app id="app-container">
     <footer>
       <nav>
-        <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/"><v-icon icon="mdi-home-variant"></v-icon></RouterLink>
         <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/map"><v-icon icon="mdi-map"></v-icon></RouterLink>
         <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/world"><v-icon icon="mdi-earth"></v-icon></RouterLink>
         <RouterLink class="router-button" style="border: 2px solid var(--dark-mode-text);" to="/dashboard"><v-icon icon="mdi-chart-box"></v-icon></RouterLink>
