@@ -104,11 +104,7 @@ function updatePolygons() {
             const itemColor = 'blue'; // Or default color
             const boundaryData = BOUNDARIES.find(country => country.iso3 === item.iso3);
             if (boundaryData) {
-                const coords = boundaryData.geo_shape.geometry.coordinates.map(innerArray =>
-                    innerArray.map(item =>
-                        Array.isArray(item) ? item.reverse() : item
-                    )
-                );
+                const coords = reverseCoords(boundaryData.geo_shape.geometry.coordinates);
 
                 const polygon = createPolygon(coords, itemColor, item.country, item.id);
                 polygons.value.push({ id: item.id, polygon, itemColor });
@@ -145,12 +141,28 @@ function createPolygon(coords, color, popupText = "", itemId) {
     return polygon;
 }
 
-function checkVisiblePolygons() {
-    const mapBounds = map.value.getBounds();
-    visibleInfos.value = data.value.filter(item => {
-        const polygon = L.polygon(item.area);
-        return mapBounds.intersects(polygon.getBounds());
+function reverseCoords(coords) {
+    return coords.map(innerArray => {
+        if (Array.isArray(innerArray[0])) {
+            return reverseCoords(innerArray);
+        } else {
+            return innerArray.slice().reverse();
+        }
     });
+}
+
+function checkVisiblePolygons() {
+    if(!isWorldMap()){
+        const mapBounds = map.value.getBounds();
+        visibleInfos.value = data.value.filter(item => {
+            const polygon = L.polygon(item.area);
+            return mapBounds.intersects(polygon.getBounds());
+        });
+    }
+}
+
+function isWorldMap() {
+    return props.url.endsWith('world-map');
 }
 
 function toggleDetails(cardId) {
@@ -193,14 +205,14 @@ function setAutoUpdate() {
 </script>
 
 <template>
-    <v-btn style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
+    <v-btn v-if="!isWorldMap()" style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
         @click="showWarning = true;">
         <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
     <div id="map"></div>
     <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
-    <WarningsList v-model="showWarning" :warning-cards="visibleInfos" @go-back="showWarning = false;"
-        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea" @show-details="toggleDetails" />
+    <WarningsList v-if="!isWorldMap()" v-model="showWarning" :warning-cards="visibleInfos" @go-back="showWarning = false;"
+        @highlight-area="highlightArea" @unhighlight-area="unhighlightArea" @show-details="toggleDetails"/>
 </template>
 
 

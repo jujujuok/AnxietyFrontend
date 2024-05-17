@@ -28,14 +28,6 @@
                     </div>
                 </v-list-item>
             </RouterLink>
-            <RouterLink class="router-link" :to="{name: 'dashboard', params: {type: 'interpol'}}">
-                <v-list-item @click="drawer = false; router.push('/dashboard/interpol');">
-                    <div class="topic-container">
-                        <v-icon class="topic-content">mdi-account-search</v-icon>
-                        <v-list-item-title class="topic-content topic-title">Interpol</v-list-item-title>
-                    </div>
-                </v-list-item>
-            </RouterLink>
         </v-list>
     </v-navigation-drawer>
 
