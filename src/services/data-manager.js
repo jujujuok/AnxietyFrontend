@@ -8,9 +8,8 @@ class DataManager {
                 const jsonData = JSON.stringify(data);
                 if(!localStorage.hasOwnProperty('dashboardData')|| localStorage.getItem('dashboardData') === "undefined" || this.getDashboardData(jsonData).length === 0) {
                     localStorage.setItem('dashboardData', jsonData);
-                    console.log('Dashboard data saved successfully.');
                 } else {
-                    console.log('Dashboard data already exists in localStorage.');
+                    // console.log('Dashboard data already exists in localStorage.');
                 }
             } catch (error) {
                 console.error('Failed to save dashboard data to localStorage:', error);
@@ -29,7 +28,6 @@ class DataManager {
                 }
                 return JSON.parse(jsonData);
             } else {
-                console.log('No dashboard data found in localStorage.');
                 return null;
             }
         } catch (error) {
@@ -42,12 +40,10 @@ class DataManager {
         if(data !== null && data !== undefined){
             try {
                 const jsonData = JSON.stringify(data);
-                console.log(jsonData);
                 if(!localStorage.hasOwnProperty('mapData') || localStorage.getItem('mapData') === "undefined" || this.getMapData(jsonData).length === 0){
                     localStorage.setItem('mapData', jsonData);
-                    console.log('Map data saved successfully.');
                 } else {
-                    console.log('Map data already exists in localStorage.');
+                    // console.log('Map data already exists in localStorage.');
                 }
             } catch (error) {
                 console.error('Failed to save map data to localStorage:', error);
@@ -68,7 +64,6 @@ class DataManager {
                 }
                 return JSON.parse(jsonData);
             } else {
-                console.log('No map data found in localStorage.');
                 return null;
             }
         } catch (error) {
@@ -84,9 +79,7 @@ class DataManager {
         if (index !== -1 && !dashboardData[index].hasOwnProperty('details')) {
             dashboardData[index].details = details;
             localStorage.setItem('dashboardData', JSON.stringify(dashboardData));
-            console.log(`Details appended for card ID ${cardId}`);
         } else {
-            console.log(`Details already exist for card ID ${cardId} or card not found.`);
         }
     }
 
@@ -106,7 +99,6 @@ class DataManager {
         const index = dashboardData.findIndex(item => item.id === cardId);
 
         if (index !== -1 && dashboardData[index].hasOwnProperty('details')) {
-            console.log('Details found for card ID:', cardId);
             return dashboardData[index].details;
         } else {
             return null;
@@ -131,8 +123,6 @@ class DataManager {
         });
 
         localStorage.setItem('dashboardData', JSON.stringify(dashboardData));
-
-        console.log('Dashboard data synchronized successfully.');
     }
 
     async synchronizeMapData() {
@@ -153,8 +143,6 @@ class DataManager {
             });
 
             localStorage.setItem('mapData', JSON.stringify(mapData));
-
-            console.log('Map data synchronized successfully.');
         } catch (error) {
             console.error('Failed to synchronize map data:', error);
         }
@@ -167,9 +155,8 @@ class DataManager {
         if (index !== -1 && !mapData[index].hasOwnProperty('details')) {
             mapData[index].details = details;
             localStorage.setItem('mapData', JSON.stringify(mapData));
-            console.log(`Details appended for card ID ${cardId}`);
         } else {
-            console.log(`Details already exist for card ID ${cardId} or card not found.`);
+            // console.log(`Details already exist for card ID ${cardId} or card not found.`);
         }
     }
 
@@ -189,7 +176,6 @@ class DataManager {
         const index = mapData.findIndex(item => item.id === cardId);
 
         if (index !== -1 && mapData[index].hasOwnProperty('details')) {
-            console.log('Details found for card ID:', cardId);
             return mapData[index].details;
         } else {
             return null;

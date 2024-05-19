@@ -27,7 +27,7 @@ const url = "https://api.risiko-radar.info/map";
     </v-btn-toggle>
   </div>
 
-  <MapComponent :start_lon="51.163361" :start_lat="10.447683" :zoom_start="6" :url="url" :filter="filter" />
+  <MapComponent :start_lon="51" :start_lat="10" :zoom_start="6" :url="url" :filter="filter" />
 </template>
 
 <style>

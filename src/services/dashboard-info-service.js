@@ -8,7 +8,6 @@ class DashboardInfoService {
     async getDashboardInfos() {
         return axios.get(`${this.baseUrl}/dashboard`)
             .then(response => {
-                console.log(response);
                 return response.data;
             })
             .catch(error => {
@@ -20,7 +19,6 @@ class DashboardInfoService {
     async fetchCardDetailsById(id) {
         try {
             const response = await axios.get(`${this.baseUrl}/dashboard/${id}`);
-            console.log(`Card details for id ${id}:`, response.data);
             return response.data;
         } catch (error) {
             console.error('Failed to fetch card details:', error);
@@ -30,7 +28,6 @@ class DashboardInfoService {
     async fetchMapDetailsById(id) {
         try {
             const response = await axios.get(`${this.baseUrl}/map/${id}`);
-            console.log(`Card details for id ${id}:`, response.data);
             return response.data;
         } catch (error) {
             console.error('Failed to fetch card details:', error);
@@ -48,7 +45,6 @@ class DashboardInfoService {
                 }
             });
 
-            console.log('Success:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error updating dashboard timestamp:', error);
@@ -66,7 +62,6 @@ class DashboardInfoService {
                 }
             });
 
-            console.log('Success:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error updating dashboard timestamp:', error);

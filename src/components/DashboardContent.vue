@@ -200,7 +200,6 @@ function openSideView(cardInfo) {
         if (cardInfo.id != null && !dataManager.doDashboardDetailsExist(cardInfo.id)) {
             DashboardInfoService.fetchCardDetailsById(cardInfo.id).then(
                 (response) => {
-                    console.log(response);
                     selectedCard.value = response;
                     if(cardInfo.hasOwnProperty('area')){
                         selectedCard.value.area = cardInfo.area;
@@ -221,13 +220,12 @@ function openSideView(cardInfo) {
 function filterData() {
     const filters = APIType[props.type];
     const unfilteredData = dataManager.getDashboardData()
-    console.log(`Type: ${props.type}`);
 
     //if the dashboard is for food and product warnings
     if (props.type === 'food-product-warnings') {
         switch (selected.value) {
             case 'food':
-                console.log(cardInfos.value);
+                // console.log(cardInfos.value);
                 cardInfos.value = unfilteredData.filter((card) => selectedArea.value ? card.type === filters[0] && card.area.includes(selectedArea.value) : card.type === filters[0]);
                 break;
             case 'product':
@@ -277,7 +275,6 @@ setInterval(() => {
     filterData();
     sortData();
 
-    console.log("Synchronized dashboard data.")
 }, 300000);
 
 watch(selectedArea, () => {

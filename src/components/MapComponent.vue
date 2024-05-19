@@ -52,7 +52,6 @@ async function fetchDataAndUpdateMap() {
     if (!props.url) return;
     try {
         const dataFromApi = await callApi(props.url);
-        console.log("data from api: ", dataFromApi);
         dataManager.saveMapData(dataFromApi);
         data.value = dataManager.getMapData();
         updatePolygons();
@@ -84,12 +83,8 @@ function updatePolygons() {
      * if area in data.values use this, 
      * else: get area from the world-administrative-boundaries.json
      */
-
-    console.log("size: ", data.value.length)
-
     data.value.forEach(item => {
         if (item.hasOwnProperty('area')) {
-            console.log("polygon: ", item.area);
             // "area" exists, use it
             if (!props.filter.includes(item.type)) return;
 
@@ -203,7 +198,6 @@ function setAutoUpdate() {
     setInterval(async () => {
         await dataManager.synchronizeMapData();
         await fetchDataAndUpdateMap();
-        console.log("Synchronized map data.");
     }, 300000); // 5 minutes
 }
 </script>
