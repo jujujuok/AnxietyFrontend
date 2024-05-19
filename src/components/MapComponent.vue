@@ -88,8 +88,8 @@ function updatePolygons() {
     console.log("size: ", data.value.length)
 
     data.value.forEach(item => {
-
         if (item.hasOwnProperty('area')) {
+            console.log("polygon: ", item.area);
             // "area" exists, use it
             if (!props.filter.includes(item.type)) return;
 
@@ -154,11 +154,15 @@ function reverseCoords(coords) {
 function checkVisiblePolygons() {
     if(!isWorldMap()){
         const mapBounds = map.value.getBounds();
-        visibleInfos.value = data.value.filter(item => {
-            const polygon = L.polygon(item.area);
-            return mapBounds.intersects(polygon.getBounds());
-        });
-    }
+            visibleInfos.value = data.value.filter(item => {
+                if(item.hasOwnProperty('area')){
+                    if(item.area.length > 0){
+                        const polygon = L.polygon(item.area);
+                        return mapBounds.intersects(polygon.getBounds());
+                    }
+                }
+            });
+        }
 }
 
 function isWorldMap() {

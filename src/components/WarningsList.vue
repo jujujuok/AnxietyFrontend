@@ -5,13 +5,6 @@
                 <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
             <v-toolbar-title>Warnungen</v-toolbar-title>
-            <v-select
-                    style="max-width: 50%; margin-top: 1vh;"
-                    v-model="selectedOrder"
-                    :items="['Aufsteigend', 'Absteigend']"
-                    class="select-area"
-                    @update:model-value="console.log('Sort by time')"
-            ></v-select>
         </nav>
         <v-list dense>
             <v-card
@@ -32,10 +25,8 @@
 </template>
 
 <script setup>
-import {ref, watch} from 'vue';
+import {ref} from 'vue';
 import SideView from "@/components/SideView.vue";
-import DashboardInfoService from "@/services/dashboard-info-service.js";
-import DataManager from "@/services/data-manager.js";
 
 defineProps({
     warningCards: Array
@@ -49,7 +40,6 @@ const typeColor = {
 }
 
 const showWarningsList = defineModel();
-const selectedOrder = ref('Aufsteigend');
 const showDetails = ref(false);
 const selectedWarning = ref({});
 </script>

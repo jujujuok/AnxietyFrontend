@@ -3,7 +3,7 @@
 import MapComponent from "@/components/MapComponent.vue"
 import "leaflet/dist/leaflet.css";
 
-const url = "http://api.risiko-radar.info/world-map";
+const url = "https://api.risiko-radar.info/world-map";
 
 </script>
 

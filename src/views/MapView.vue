@@ -7,7 +7,7 @@ import { VBtn, VBtnToggle } from 'vuetify/components';
 
 const filter = defineModel({ default: [] });
 
-const url = "http://api.risiko-radar.info/map";
+const url = "https://api.risiko-radar.info/map";
 
 </script>
 
