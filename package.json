@@ -17,8 +17,8 @@
     "dependencies": {
         "@material/web": "^1.0.0",
         "axios": "^1.6.8",
-        "countries-list": "^3.1.0",
         "date-fns": "^3.6.0",
+        "i18n-iso-countries": "^7.11.2",
         "npm": "^10.5.0",
         "serve": "^14.2.1",
         "swagger-ui": "^5.13.0",

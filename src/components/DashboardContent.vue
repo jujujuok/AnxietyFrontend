@@ -77,16 +77,19 @@
 </template>
 
 <script setup>
+import countries, {getNames} from "i18n-iso-countries";
+import deLocale from 'i18n-iso-countries/langs/de.json';
 import SelectedButton from "@/components/SelectedButton.vue";
 import DashboardInfoService from "@/services/dashboard-info-service.js";
 import SideView from "@/components/SideView.vue";
 import {computed, onBeforeMount, ref, watch} from 'vue';
 import {onBeforeRouteUpdate} from "vue-router";
-import {getCountryDataList} from "countries-list";
 import {formatDistanceToNow} from "date-fns";
 import {de} from "date-fns/locale";
 import DataManager from "@/services/data-manager.js";
-import NotificationProvider from "@/services/notification-provider.js";
+
+//Register country language to german
+countries.registerLocale(deLocale);
 
 const props = defineProps({
     type: String,
@@ -168,11 +171,7 @@ function setSelectButtonContent(dashboardType) {
                 'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen'
             ];
         default:
-            return getCountryDataList().map(
-                (countryList) => {
-                    return countryList.name
-                }
-            );
+            return Object.entries(getNames('de')).map(([key, value]) => value);
     }
 }
 
