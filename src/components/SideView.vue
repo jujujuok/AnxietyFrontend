@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer style="width: 60vh;" v-model="showDetails" location="right">
+    <v-navigation-drawer v-model="showDetails" location="right" width="500">
         <v-btn style="box-shadow: none; margin-right: 1vh;" icon @click="showDetails = false;">
             <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
@@ -33,8 +33,6 @@
 
 
 <script setup>
-import { ref } from 'vue';
-
 const props = defineProps({
     cardInfoDetails: Object
 });
@@ -60,7 +58,7 @@ const iconMapping = {
     gesundheit: 'mdi-hospital-building'
 };
 
-const showDetails = defineModel();
+const showDetails = defineModel({ default: false });
 
 const germanTranslations = {
     description: 'Beschreibung',
@@ -92,6 +90,7 @@ const formatValue = (key, value) => {
 </script>
 
 <style scoped>
+
 .topic-title {
     font-weight: bold;
 }

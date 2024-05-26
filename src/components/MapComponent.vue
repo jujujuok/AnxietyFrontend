@@ -204,7 +204,7 @@ function setAutoUpdate() {
 
 <template>
     <v-btn v-if="!isWorldMap()" style="box-shadow: none; margin-left: 1vh; position: absolute; top: 15vh; z-index: 1000;" icon
-        @click="showWarning = true;">
+        @click="showWarning = true; console.log(showWarning)">
         <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
     <div id="map"></div>

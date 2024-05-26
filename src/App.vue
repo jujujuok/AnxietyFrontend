@@ -13,7 +13,7 @@ import {VIcon} from 'vuetify/components';
       </nav>
     </footer>
 
-  <RouterView style="margin-bottom: calc(60px + 1rem);" />
+  <RouterView/>
   </v-app>
 </template>
 

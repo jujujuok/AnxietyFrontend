@@ -1,7 +1,7 @@
 <template>
-    <v-navigation-drawer style="width: 60vh;" v-model="showWarningsList" permanent fixed clipped location="left" app>
+    <v-navigation-drawer width="500" v-model="showWarningsList" location="left">
         <nav style="display: flex; align-items: center;">
-            <v-btn style="box-shadow: none; margin-right: 1vh;" icon @click="$emit('goBack'); console.log(showWarningsList);">
+            <v-btn style="box-shadow: none; margin-right: 1vh;" icon @click="$emit('goBack');">
                 <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
             <v-toolbar-title>Warnungen</v-toolbar-title>
@@ -10,9 +10,9 @@
             <v-card
                     :style="{ backgroundColor: typeColor[card.type], padding: '2vh', margin: '1vh 3vh' }"
                     v-for="card in warningCards" :key="card.id"
-                    @click="$emit('showDetails', card.id)"
-                    @mouseover="$emit('highlightArea', card.id);"
-                    @mouseout="$emit('unhighlightArea', card.id);"
+                    @click="emit('showDetails', card.id)"
+                    @mouseover="emit('highlightArea', card.id);"
+                    @mouseout="emit('unhighlightArea', card.id);"
             >
                 <v-list-item-title style="white-space: normal; color: var(--dark-mode-bg);">{{
                     card.title
@@ -21,7 +21,6 @@
             </v-card>
         </v-list>
     </v-navigation-drawer>
-    <SideView :cardInfoDetails="selectedWarning" v-model="showDetails"></SideView>
 </template>
 
 <script setup>
@@ -32,6 +31,9 @@ defineProps({
     warningCards: Array
 });
 
+const emit = defineEmits(['goBack', 'highlightArea', 'unhighlightArea', 'showDetails']);
+
+
 const typeColor = {
     "nina": "#6D6BFF",
     "weather": "#358435",
@@ -39,7 +41,7 @@ const typeColor = {
     "default": "#DA5450"
 }
 
-const showWarningsList = defineModel();
+const showWarningsList = defineModel({ default: false });
 const showDetails = ref(false);
 const selectedWarning = ref({});
 </script>
